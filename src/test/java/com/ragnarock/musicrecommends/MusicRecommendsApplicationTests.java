@@ -8,6 +8,7 @@ class MusicRecommendsApplicationTests {
 
 	@Test
 	void contextLoads() {
+		//Something
 	}
 
 }

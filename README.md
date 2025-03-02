@@ -31,10 +31,14 @@
 
 ## Установка и запуск
 
+
+
+---
+
 ### Требования
 
 - Установленная Java 23 или выше.
-- Установленный Maven/Graddle
+- Установленный Maven
 - Установленная PostgreSQL.
 
 ---
@@ -50,12 +54,12 @@
 ---
 
 ## **Задание**  
-1. **Создать и запустить локально REST-сервис** на Java (Spring Boot + PostgreSQL + Maven/Gradle).  
-2. **Настроить подключение к базе данных (PostgreSQL).**  
+1. **Создать и запустить локально REST-сервис** на Java (Spring Boot + PostgreSQL + Maven).  
+2. **Настроить подключение к базе данных** (PostgreSQL).  
 3. **Добавить GET эндпоинт с Query Parameters** для .  
 4. **Добавить GET эндпоинт с Path Parameters** для .  
-5. **Настроить CheckStyle** и исправить ошибки.  
-6. **Формат ответа – JSON.**  
+5. **Настроить CheckStyle** и исправить ошибки.
+6. **Формат ответа – JSON**.  
 
 ---
 
@@ -67,53 +71,9 @@
 
 ---
 
-## **Настройка CheckStyle**
-
-### **Maven**
-Добавьте в `pom.xml`:
-```xml
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-checkstyle-plugin</artifactId>
-    <version>3.1.2</version>
-    <configuration>
-        <configLocation>checkstyle.xml</configLocation>
-    </configuration>
-</plugin>
-```
-Запустите проверку:
-```sh
-mvn checkstyle:check
-```
-
-### **Gradle**
-Добавьте в `build.gradle`:
-```groovy
-plugins {
-    id 'checkstyle'
-}
-
-checkstyle {
-    toolVersion = '10.12.0'
-    configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
-}
-
-tasks.withType(Checkstyle).configureEach {
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
-}
-```
-Запустите проверку:
-```sh
-gradle check
-```
-
----
 
 ## **Автор**
-[dstpia](https://github.com/dstpia)
+GitHub: [dstpia](https://github.com/dstpia)
 
 ---
 
