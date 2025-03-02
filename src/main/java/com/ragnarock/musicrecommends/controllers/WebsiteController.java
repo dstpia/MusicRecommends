@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class WebsiteController {
-    private final String title = "title";
+    private static final String title = "title";
 
     @GetMapping("/")
     public String home(Model model) {
