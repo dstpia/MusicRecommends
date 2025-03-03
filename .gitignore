@@ -32,7 +32,3 @@ build/
 ### VS Code ###
 .vscode/
 google-checkstyle.xml
-
-### Future updates ###
-/src/main/java/com/ragnarock/musicrecommends/controllers/AlbumController.java
-/src/main/java/com/ragnarock/musicrecommends/controllers/AuthorController.java
