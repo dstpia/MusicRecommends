@@ -31,8 +31,8 @@ public class InMemorySongDao {
 
     public List<Song> getSongs(String name, String lyrics) {
         return songs.stream()
-                .filter(foundedsong -> name == null || foundedsong.getName().equals(name))
-                .filter(foundedsong -> lyrics == null || foundedsong.getLyrics().equals(lyrics))
+                .filter(foundedSong -> name == null || foundedSong.getName().equals(name))
+                .filter(foundedSong -> lyrics == null || foundedSong.getLyrics().equals(lyrics))
                 .toList();
     }
 

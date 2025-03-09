@@ -5,7 +5,15 @@ import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.SongService;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/songs")
@@ -18,7 +26,8 @@ public class SongController {
                                @RequestParam(required = false) String lyrics) {
         List<Song> songs = songService.getSongs(name, lyrics);
         if (songs.isEmpty()) {
-            throw new UnExistedItemException("Songs not found, name: " + name + ", lyrics: " + lyrics);
+            throw new UnExistedItemException("Songs not found, name: " + name
+                    + ", lyrics: " + lyrics);
         }
         return songs;
     }
