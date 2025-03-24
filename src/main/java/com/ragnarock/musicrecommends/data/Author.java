@@ -29,8 +29,8 @@ public class Author {
     @ManyToMany
     @JoinTable(
             name = "songs_authors",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "song_id")
+            joinColumns = @JoinColumn(name = "authorId"),
+            inverseJoinColumns = @JoinColumn(name = "songId")
     )
     @ToString.Exclude
     @Nullable
