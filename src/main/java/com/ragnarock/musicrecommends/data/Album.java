@@ -1,6 +1,5 @@
 package com.ragnarock.musicrecommends.data;
 
-import com.ragnarock.musicrecommends.dto.AlbumDto;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

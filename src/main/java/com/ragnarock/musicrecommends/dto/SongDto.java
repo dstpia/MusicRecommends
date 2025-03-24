@@ -10,7 +10,7 @@ public class SongDto {
     private String name;
     private String lyrics;
     @Nullable
-    private Long album_id;
+    private Long albumId;
     @Nullable
-    private List<Long> authors_id;
+    private List<Long> authorsId;
 }

@@ -1,6 +1,5 @@
 package com.ragnarock.musicrecommends.controllers;
 
-import com.ragnarock.musicrecommends.data.Album;
 import com.ragnarock.musicrecommends.dto.AlbumDto;
 import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.AlbumService;
@@ -23,12 +22,12 @@ public class AlbumController {
     private final AlbumService albumService;
 
     @GetMapping
-    public List<AlbumDto> findAll () {
+    public List<AlbumDto> findAll() {
         return albumService.findAll();
     }
 
     @GetMapping("/find")
-    public List<AlbumDto> findByNameAndGenre (@RequestParam(required = false) String name,
+    public List<AlbumDto> findByNameAndGenre(@RequestParam(required = false) String name,
                                            @RequestParam(required = false) String genre) {
         List<AlbumDto> albums = albumService.findByNameAndGenre(name, genre);
         if (albums.isEmpty()) {

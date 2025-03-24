@@ -12,7 +12,7 @@ public class AlbumDto {
     @Nullable
     private Long year;
     @Nullable
-    private List<Long> songs_id;
+    private List<Long> songsId;
     @Nullable
-    private Long author_id;
+    private Long authorId;
 }

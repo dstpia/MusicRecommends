@@ -1,6 +1,5 @@
 package com.ragnarock.musicrecommends.controllers;
 
-import com.ragnarock.musicrecommends.data.Author;
 import com.ragnarock.musicrecommends.dto.AuthorDto;
 import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.AuthorService;
@@ -23,7 +22,7 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping
-    public List<AuthorDto> findAll () {
+    public List<AuthorDto> findAll() {
         return authorService.findAll();
     }
 

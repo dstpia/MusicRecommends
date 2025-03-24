@@ -10,7 +10,7 @@ public class AuthorDto {
     private String name;
     private String genre;
     @Nullable
-    private List<Long> albums_id;
+    private List<Long> albumsId;
     @Nullable
-    private List<Long> songs_id;
+    private List<Long> songsId;
 }

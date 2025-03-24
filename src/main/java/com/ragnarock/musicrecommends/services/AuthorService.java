@@ -1,9 +1,7 @@
 package com.ragnarock.musicrecommends.services;
 
-import com.ragnarock.musicrecommends.data.Author;
-import java.util.List;
-
 import com.ragnarock.musicrecommends.dto.AuthorDto;
+import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service

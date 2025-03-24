@@ -6,7 +6,6 @@ import com.ragnarock.musicrecommends.dto.SongDto;
 import com.ragnarock.musicrecommends.mappers.SongMapper;
 import com.ragnarock.musicrecommends.repository.AlbumRepository;
 import com.ragnarock.musicrecommends.repository.AuthorRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,10 +25,10 @@ public class SongMapperImpl implements SongMapper {
         songDto.setName(song.getName());
         songDto.setLyrics(song.getLyrics());
         if (song.getAlbum() != null) {
-            songDto.setAlbum_id(song.getAlbum().getId());
+            songDto.setAlbumId(song.getAlbum().getId());
         }
         if (song.getAuthors() != null) {
-            songDto.setAuthors_id(song.getAuthors().stream()
+            songDto.setAuthorsId(song.getAuthors().stream()
                     .map(Author::getId).collect(Collectors.toList()));
         }
         return songDto;
@@ -41,12 +40,12 @@ public class SongMapperImpl implements SongMapper {
         song.setId(songDto.getId());
         song.setName(songDto.getName());
         song.setLyrics(songDto.getLyrics());
-        if (songDto.getAlbum_id() != null) {
-            song.setAlbum(albumRepository.findById(songDto.getAlbum_id())
+        if (songDto.getAlbumId() != null) {
+            song.setAlbum(albumRepository.findById(songDto.getAlbumId())
                     .orElse(null));
         }
-        if (songDto.getAuthors_id() != null) {
-            song.setAuthors(authorRepository.findAllById(songDto.getAuthors_id()));
+        if (songDto.getAuthorsId() != null) {
+            song.setAuthors(authorRepository.findAllById(songDto.getAuthorsId()));
         }
         return song;
     }

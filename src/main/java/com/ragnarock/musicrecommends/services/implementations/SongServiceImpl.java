@@ -1,6 +1,5 @@
 package com.ragnarock.musicrecommends.services.implementations;
 
-import com.ragnarock.musicrecommends.data.Song;
 import com.ragnarock.musicrecommends.dto.SongDto;
 import com.ragnarock.musicrecommends.mappers.SongMapper;
 import com.ragnarock.musicrecommends.repository.SongRepository;
@@ -19,7 +18,7 @@ public class SongServiceImpl implements SongService {
     private final SongMapper mapper;
 
     @Override
-    public List<SongDto> findAll(){
+    public List<SongDto> findAll() {
         return mapper.mapToDtoList(repository.findAll());
     }
 

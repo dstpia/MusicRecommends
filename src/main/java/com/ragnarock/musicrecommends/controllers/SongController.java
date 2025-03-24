@@ -1,7 +1,5 @@
 package com.ragnarock.musicrecommends.controllers;
 
-import com.ragnarock.musicrecommends.data.Album;
-import com.ragnarock.musicrecommends.data.Song;
 import com.ragnarock.musicrecommends.dto.SongDto;
 import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.SongService;
@@ -24,7 +22,7 @@ public class SongController {
     private final SongService songService;
 
     @GetMapping
-    public List<SongDto> findAll () {
+    public List<SongDto> findAll() {
         return songService.findAll();
     }
 

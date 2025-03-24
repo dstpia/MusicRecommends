@@ -1,6 +1,5 @@
 package com.ragnarock.musicrecommends.services.implementations;
 
-import com.ragnarock.musicrecommends.data.Author;
 import com.ragnarock.musicrecommends.dto.AuthorDto;
 import com.ragnarock.musicrecommends.mappers.AuthorMapper;
 import com.ragnarock.musicrecommends.repository.AuthorRepository;
@@ -19,7 +18,7 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorMapper mapper;
 
     @Override
-    public List<AuthorDto> findAll(){
+    public List<AuthorDto> findAll() {
         return mapper.mapToDtoList(repository.findAll());
     }
 

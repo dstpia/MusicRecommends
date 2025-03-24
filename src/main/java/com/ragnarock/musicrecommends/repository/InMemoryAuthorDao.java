@@ -1,6 +1,5 @@
 package com.ragnarock.musicrecommends.repository;
 
-import com.ragnarock.musicrecommends.data.Album;
 import com.ragnarock.musicrecommends.data.Author;
 import java.util.ArrayList;
 import java.util.List;

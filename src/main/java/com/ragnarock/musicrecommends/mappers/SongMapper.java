@@ -2,7 +2,6 @@ package com.ragnarock.musicrecommends.mappers;
 
 import com.ragnarock.musicrecommends.data.Song;
 import com.ragnarock.musicrecommends.dto.SongDto;
-
 import java.util.List;
 
 public interface SongMapper {

@@ -1,6 +1,5 @@
 package com.ragnarock.musicrecommends.services.implementations;
 
-import com.ragnarock.musicrecommends.data.Album;
 import com.ragnarock.musicrecommends.dto.AlbumDto;
 import com.ragnarock.musicrecommends.mappers.AlbumMapper;
 import com.ragnarock.musicrecommends.repository.AlbumRepository;

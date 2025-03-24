@@ -15,7 +15,7 @@ public class InMemoryAuthorServiceImpl implements AuthorService {
     private final AuthorMapper mapper;
 
     @Override
-    public List<AuthorDto> findAll(){
+    public List<AuthorDto> findAll() {
         return mapper.mapToDtoList(repository.findAll());
     }
 

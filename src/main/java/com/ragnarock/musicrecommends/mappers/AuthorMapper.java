@@ -2,7 +2,6 @@ package com.ragnarock.musicrecommends.mappers;
 
 import com.ragnarock.musicrecommends.data.Author;
 import com.ragnarock.musicrecommends.dto.AuthorDto;
-
 import java.util.List;
 
 public interface AuthorMapper {
