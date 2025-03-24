@@ -1,17 +1,21 @@
 package com.ragnarock.musicrecommends.services.implementations;
 
+import com.ragnarock.musicrecommends.data.Author;
 import com.ragnarock.musicrecommends.dto.AuthorDto;
 import com.ragnarock.musicrecommends.mappers.AuthorMapper;
-import com.ragnarock.musicrecommends.repository.InMemoryAuthorDao;
+import com.ragnarock.musicrecommends.repository.AuthorRepository;
 import com.ragnarock.musicrecommends.services.AuthorService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public class InMemoryAuthorServiceImpl implements AuthorService {
-    private final InMemoryAuthorDao repository;
+@Primary
+public class AuthorServiceImpl implements AuthorService {
+    private final AuthorRepository repository;
     private final AuthorMapper mapper;
 
     @Override
@@ -26,21 +30,22 @@ public class InMemoryAuthorServiceImpl implements AuthorService {
 
     @Override
     public AuthorDto findById(Long id) {
-        return mapper.mapToDto(repository.findById(id));
+        return mapper.mapToDto(repository.findById(id).orElse(null));
     }
 
     @Override
     public AuthorDto saveAuthor(AuthorDto authorDto) {
-        return mapper.mapToDto(repository.saveAuthor(mapper.mapToObject(authorDto)));
+        return mapper.mapToDto(repository.save(mapper.mapToObject(authorDto)));
     }
 
     @Override
     public AuthorDto updateAuthor(AuthorDto authorDto) {
-        return mapper.mapToDto(repository.updateAuthor(mapper.mapToObject(authorDto)));
+        return mapper.mapToDto(repository.save(mapper.mapToObject(authorDto)));
     }
 
     @Override
+    @Transactional
     public void deleteAuthor(Long id) {
-        repository.deleteAuthor(repository.findById(id));
+        repository.deleteById(id);
     }
 }

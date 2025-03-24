@@ -3,20 +3,23 @@ package com.ragnarock.musicrecommends.services.implementations;
 import com.ragnarock.musicrecommends.data.Album;
 import com.ragnarock.musicrecommends.dto.AlbumDto;
 import com.ragnarock.musicrecommends.mappers.AlbumMapper;
-import com.ragnarock.musicrecommends.repository.InMemoryAlbumDao;
+import com.ragnarock.musicrecommends.repository.AlbumRepository;
 import com.ragnarock.musicrecommends.services.AlbumService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public class InMemoryAlbumServiceImpl implements AlbumService {
-    private final InMemoryAlbumDao repository;
+@Primary
+public class AlbumServiceImpl implements AlbumService {
+    private final AlbumRepository repository;
     private final AlbumMapper mapper;
 
     @Override
-    public List<AlbumDto> findAll(){
+    public List<AlbumDto> findAll() {
         return mapper.mapToDtoList(repository.findAll());
     }
 
@@ -27,22 +30,23 @@ public class InMemoryAlbumServiceImpl implements AlbumService {
 
     @Override
     public AlbumDto findById(Long id) {
-        return mapper.mapToDto(repository.findById(id));
+        return mapper.mapToDto(repository.findById(id).orElse(null));
     }
 
     @Override
     public AlbumDto saveAlbum(AlbumDto albumDto) {
-        return mapper.mapToDto(repository.saveAlbum(mapper.mapToObject(albumDto)));
+        return mapper.mapToDto(repository.save(mapper.mapToObject(albumDto)));
     }
 
     @Override
     public AlbumDto updateAlbum(AlbumDto albumDto) {
-        return mapper.mapToDto(repository.updateAlbum(mapper.mapToObject(albumDto)));
+        return mapper.mapToDto(repository.save(mapper.mapToObject(albumDto)));
     }
 
     @Override
+    @Transactional
     public void deleteAlbum(Long id) {
-        repository.deleteAlbum(repository.findById(id));
+        repository.deleteById(id);
     }
 
     @Override

@@ -2,18 +2,24 @@ package com.ragnarock.musicrecommends.services;
 
 import com.ragnarock.musicrecommends.data.Album;
 import java.util.List;
+
+import com.ragnarock.musicrecommends.dto.AlbumDto;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface AlbumService {
 
-    List<Album> getAlbums(String name, String genre, String recordLabel);
+    List<AlbumDto> findAll();
 
-    Album getAlbumById(int id);
+    List<AlbumDto> findByNameAndGenre(String name, String genre);
 
-    Album saveAlbum(Album album);
+    AlbumDto findById(Long id);
 
-    Album updateAlbum(Album album);
+    AlbumDto saveAlbum(AlbumDto album);
 
-    void deleteAlbum(Album album);
+    AlbumDto updateAlbum(AlbumDto album);
+
+    void deleteAlbum(Long id);
+
+    List<AlbumDto> findByYear(Long year);
 }

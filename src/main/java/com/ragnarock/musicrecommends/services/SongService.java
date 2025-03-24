@@ -2,18 +2,22 @@ package com.ragnarock.musicrecommends.services;
 
 import com.ragnarock.musicrecommends.data.Song;
 import java.util.List;
+
+import com.ragnarock.musicrecommends.dto.SongDto;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface SongService {
 
-    List<Song> getSongs(String name, String lyrics);
+    List<SongDto> findAll();
 
-    Song getSongById(int id);
+    List<SongDto> findByNameAndLyrics(String name, String lyrics);
 
-    Song saveSong(Song song);
+    SongDto findById(Long id);
 
-    Song updateSong(Song song);
+    SongDto saveSong(SongDto songDto);
 
-    void deleteSong(Song song);
+    SongDto updateSong(SongDto songDto);
+
+    void deleteSong(Long id);
 }
