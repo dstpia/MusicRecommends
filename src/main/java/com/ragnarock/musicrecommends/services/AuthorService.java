@@ -1,21 +1,22 @@
 package com.ragnarock.musicrecommends.services;
 
-import com.ragnarock.musicrecommends.dto.AuthorDto;
+import com.ragnarock.musicrecommends.dto.longdto.LongAuthorDto;
+import com.ragnarock.musicrecommends.dto.shortdto.ShortAuthorDto;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface AuthorService {
 
-    List<AuthorDto> findAll();
+    List<LongAuthorDto> findAll();
 
-    List<AuthorDto> findByNameAndGenre(String name, String genre);
+    List<LongAuthorDto> findByNameAndGenre(String name, String genre);
 
-    AuthorDto findById(Long id);
+    LongAuthorDto findById(Long id);
 
-    AuthorDto saveAuthor(AuthorDto authorDto);
+    LongAuthorDto saveAuthor(ShortAuthorDto shortAuthorDto);
 
-    AuthorDto updateAuthor(AuthorDto authorDto);
+    LongAuthorDto updateAuthor(ShortAuthorDto shortAuthorDto);
 
     void deleteAuthor(Long id);
 }

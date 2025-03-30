@@ -1,6 +1,7 @@
 package com.ragnarock.musicrecommends.controllers;
 
-import com.ragnarock.musicrecommends.dto.SongDto;
+import com.ragnarock.musicrecommends.dto.longdto.LongSongDto;
+import com.ragnarock.musicrecommends.dto.shortdto.ShortSongDto;
 import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.SongService;
 import java.util.List;
@@ -22,38 +23,38 @@ public class SongController {
     private final SongService songService;
 
     @GetMapping
-    public List<SongDto> findAll() {
+    public List<LongSongDto> findAll() {
         return songService.findAll();
     }
 
     @GetMapping("/find")
-    public List<SongDto> findByNameAndLyrics(@RequestParam(required = false) String name,
-                                          @RequestParam(required = false) String lyrics) {
-        List<SongDto> songsDto = songService.findByNameAndLyrics(name, lyrics);
-        if (songsDto.isEmpty()) {
+    public List<LongSongDto> findByNameAndLyrics(@RequestParam(required = false) String name,
+                                                 @RequestParam(required = false) String lyrics) {
+        List<LongSongDto> songs = songService.findByNameAndLyrics(name, lyrics);
+        if (songs.isEmpty()) {
             throw new UnExistedItemException("Songs not found, name: " + name
                     + ", lyrics: " + lyrics);
         }
-        return songsDto;
+        return songs;
     }
 
     @GetMapping("/{id}")
-    public SongDto findById(@PathVariable Long id) throws UnExistedItemException {
-        SongDto songDto = songService.findById(id);
-        if (songDto == null) {
+    public LongSongDto findById(@PathVariable Long id) throws UnExistedItemException {
+        LongSongDto song = songService.findById(id);
+        if (song == null) {
             throw new UnExistedItemException("Song not found, id: " + id);
         }
-        return songDto;
+        return song;
     }
 
     @PostMapping("/save")
-    public SongDto saveSong(@RequestBody SongDto songDto) {
-        return songService.saveSong(songDto);
+    public LongSongDto saveSong(@RequestBody ShortSongDto shortSongDto) {
+        return songService.saveSong(shortSongDto);
     }
 
     @PutMapping("/update")
-    public SongDto updateSong(@RequestBody SongDto songDto) {
-        return songService.updateSong(songDto);
+    public LongSongDto updateSong(@RequestBody ShortSongDto shortSongDto) {
+        return songService.updateSong(shortSongDto);
     }
 
     @DeleteMapping("/delete/{id}")

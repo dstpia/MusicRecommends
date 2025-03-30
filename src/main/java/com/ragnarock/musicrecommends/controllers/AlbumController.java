@@ -1,6 +1,7 @@
 package com.ragnarock.musicrecommends.controllers;
 
-import com.ragnarock.musicrecommends.dto.AlbumDto;
+import com.ragnarock.musicrecommends.dto.longdto.LongAlbumDto;
+import com.ragnarock.musicrecommends.dto.shortdto.ShortAlbumDto;
 import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.AlbumService;
 import java.util.List;
@@ -22,14 +23,14 @@ public class AlbumController {
     private final AlbumService albumService;
 
     @GetMapping
-    public List<AlbumDto> findAll() {
+    public List<LongAlbumDto> findAll() {
         return albumService.findAll();
     }
 
     @GetMapping("/find")
-    public List<AlbumDto> findByNameAndGenre(@RequestParam(required = false) String name,
-                                           @RequestParam(required = false) String genre) {
-        List<AlbumDto> albums = albumService.findByNameAndGenre(name, genre);
+    public List<LongAlbumDto> findByNameAndGenre(@RequestParam(required = false) String name,
+                                                  @RequestParam(required = false) String genre) {
+        List<LongAlbumDto> albums = albumService.findByNameAndGenre(name, genre);
         if (albums.isEmpty()) {
             throw new UnExistedItemException("Albums not found, name: " + name
                     + ", genre: " + genre);
@@ -38,27 +39,27 @@ public class AlbumController {
     }
 
     @GetMapping("/{id}")
-    public AlbumDto findById(@PathVariable Long id) throws UnExistedItemException {
-        AlbumDto albumDto = albumService.findById(id);
-        if (albumDto == null) {
+    public LongAlbumDto findById(@PathVariable Long id) throws UnExistedItemException {
+        LongAlbumDto album = albumService.findById(id);
+        if (album == null) {
             throw new UnExistedItemException("Album not found, id: " + id);
         }
-        return albumDto;
+        return album;
     }
 
     @GetMapping("/find/{year}")
-    public List<AlbumDto> findByYear(@PathVariable Long year) {
+    public List<LongAlbumDto> findByYear(@PathVariable Long year) {
         return albumService.findByYear(year);
     }
 
     @PostMapping("/save")
-    public AlbumDto saveAlbum(@RequestBody AlbumDto albumDto) {
-        return albumService.saveAlbum(albumDto);
+    public LongAlbumDto saveAlbum(@RequestBody ShortAlbumDto shortAlbumDto) {
+        return albumService.saveAlbum(shortAlbumDto);
     }
 
     @PutMapping("/update")
-    public AlbumDto updateAlbumInfo(@RequestBody AlbumDto albumDto) {
-        return albumService.updateAlbum(albumDto);
+    public LongAlbumDto updateAlbumInfo(@RequestBody ShortAlbumDto shortAlbumDto) {
+        return albumService.updateAlbum(shortAlbumDto);
     }
 
     @DeleteMapping("/delete/{id}")

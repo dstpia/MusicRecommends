@@ -1,7 +1,9 @@
 package com.ragnarock.musicrecommends.services.implementations;
 
-import com.ragnarock.musicrecommends.dto.SongDto;
-import com.ragnarock.musicrecommends.mappers.SongMapper;
+import com.ragnarock.musicrecommends.dto.longdto.LongSongDto;
+import com.ragnarock.musicrecommends.dto.shortdto.ShortSongDto;
+import com.ragnarock.musicrecommends.mappers.longmapper.LongSongDtoMapper;
+import com.ragnarock.musicrecommends.mappers.shortmappers.ShortSongDtoMapper;
 import com.ragnarock.musicrecommends.repository.SongRepository;
 import com.ragnarock.musicrecommends.services.SongService;
 import java.util.List;
@@ -15,31 +17,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 public class SongServiceImpl implements SongService {
     private final SongRepository repository;
-    private final SongMapper mapper;
+    private final LongSongDtoMapper longSongDtoMapper;
+    private final ShortSongDtoMapper shortSongDtoMapper;
 
     @Override
-    public List<SongDto> findAll() {
-        return mapper.mapToDtoList(repository.findAll());
+    public List<LongSongDto> findAll() {
+        return longSongDtoMapper.mapToLongDtoList(repository.findAll());
     }
 
     @Override
-    public List<SongDto> findByNameAndLyrics(String name, String lyrics) {
-        return mapper.mapToDtoList(repository.findByNameAndLyrics(name, lyrics));
+    public List<LongSongDto> findByNameAndLyrics(String name, String lyrics) {
+        return longSongDtoMapper.mapToLongDtoList(repository.findByNameAndLyrics(name, lyrics));
     }
 
     @Override
-    public SongDto findById(Long id) {
-        return mapper.mapToDto(repository.findById(id).orElse(null));
+    public LongSongDto findById(Long id) {
+        return longSongDtoMapper.mapToLongDto(repository.findById(id).orElse(null));
     }
 
     @Override
-    public SongDto saveSong(SongDto songDto) {
-        return mapper.mapToDto(repository.save(mapper.mapToObject(songDto)));
+    public LongSongDto saveSong(ShortSongDto shortSongDto) {
+        return longSongDtoMapper.mapToLongDto(repository
+                .save(shortSongDtoMapper.mapToObjectFromShort(shortSongDto)));
     }
 
     @Override
-    public SongDto updateSong(SongDto songDto) {
-        return mapper.mapToDto(repository.save(mapper.mapToObject(songDto)));
+    public LongSongDto updateSong(ShortSongDto shortSongDto) {
+        return longSongDtoMapper.mapToLongDto(repository
+                .save(shortSongDtoMapper.mapToObjectFromShort(shortSongDto)));
     }
 
     @Override

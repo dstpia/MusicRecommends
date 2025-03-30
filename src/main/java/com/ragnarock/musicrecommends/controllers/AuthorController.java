@@ -1,6 +1,7 @@
 package com.ragnarock.musicrecommends.controllers;
 
-import com.ragnarock.musicrecommends.dto.AuthorDto;
+import com.ragnarock.musicrecommends.dto.longdto.LongAuthorDto;
+import com.ragnarock.musicrecommends.dto.shortdto.ShortAuthorDto;
 import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.AuthorService;
 import java.util.List;
@@ -22,38 +23,38 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping
-    public List<AuthorDto> findAll() {
+    public List<LongAuthorDto> findAll() {
         return authorService.findAll();
     }
 
     @GetMapping("/find")
-    public List<AuthorDto> getAuthors(@RequestParam(required = false) String name,
-                                   @RequestParam(required = false) String genre) {
-        List<AuthorDto> authorsDto = authorService.findByNameAndGenre(name, genre);
-        if (authorsDto.isEmpty()) {
+    public List<LongAuthorDto> getAuthors(@RequestParam(required = false) String name,
+                                           @RequestParam(required = false) String genre) {
+        List<LongAuthorDto> authors = authorService.findByNameAndGenre(name, genre);
+        if (authors.isEmpty()) {
             throw new UnExistedItemException("Authors not found, name: " + name
                     + ", genre: " + genre);
         }
-        return authorsDto;
+        return authors;
     }
 
     @GetMapping("/{id}")
-    public AuthorDto getAuthorById(@PathVariable Long id) throws UnExistedItemException {
-        AuthorDto authorDto = authorService.findById(id);
-        if (authorDto == null) {
+    public LongAuthorDto getAuthorById(@PathVariable Long id) throws UnExistedItemException {
+        LongAuthorDto author = authorService.findById(id);
+        if (author == null) {
             throw new UnExistedItemException("Author not found, id: " + id);
         }
-        return authorDto;
+        return author;
     }
 
     @PostMapping("/save")
-    public AuthorDto saveAuthor(@RequestBody AuthorDto authorDto) {
-        return authorService.saveAuthor(authorDto);
+    public LongAuthorDto saveAuthor(@RequestBody ShortAuthorDto shortAuthorDto) {
+        return authorService.saveAuthor(shortAuthorDto);
     }
 
     @PutMapping("/update")
-    public AuthorDto updateAuthorInfo(@RequestBody AuthorDto authorDto) {
-        return authorService.updateAuthor(authorDto);
+    public LongAuthorDto updateAuthorInfo(@RequestBody ShortAuthorDto shortAuthorDto) {
+        return authorService.updateAuthor(shortAuthorDto);
     }
 
     @DeleteMapping("/delete/{id}")

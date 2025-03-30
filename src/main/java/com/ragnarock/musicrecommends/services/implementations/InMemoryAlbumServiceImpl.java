@@ -1,7 +1,9 @@
 package com.ragnarock.musicrecommends.services.implementations;
 
-import com.ragnarock.musicrecommends.dto.AlbumDto;
-import com.ragnarock.musicrecommends.mappers.AlbumMapper;
+import com.ragnarock.musicrecommends.dto.longdto.LongAlbumDto;
+import com.ragnarock.musicrecommends.dto.shortdto.ShortAlbumDto;
+import com.ragnarock.musicrecommends.mappers.longmapper.LongAlbumDtoMapper;
+import com.ragnarock.musicrecommends.mappers.shortmappers.ShortAlbumDtoMapper;
 import com.ragnarock.musicrecommends.repository.InMemoryAlbumDao;
 import com.ragnarock.musicrecommends.services.AlbumService;
 import java.util.List;
@@ -12,31 +14,34 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class InMemoryAlbumServiceImpl implements AlbumService {
     private final InMemoryAlbumDao repository;
-    private final AlbumMapper mapper;
+    private final LongAlbumDtoMapper longAlbumDtoMapper;
+    private final ShortAlbumDtoMapper shortAlbumDtoMapper;
 
     @Override
-    public List<AlbumDto> findAll() {
-        return mapper.mapToDtoList(repository.findAll());
+    public List<LongAlbumDto> findAll() {
+        return longAlbumDtoMapper.mapToLongDtoList(repository.findAll());
     }
 
     @Override
-    public List<AlbumDto> findByNameAndGenre(String name, String genre) {
-        return mapper.mapToDtoList(repository.findByNameAndGenre(name, genre));
+    public List<LongAlbumDto> findByNameAndGenre(String name, String genre) {
+        return longAlbumDtoMapper.mapToLongDtoList(repository.findByNameAndGenre(name, genre));
     }
 
     @Override
-    public AlbumDto findById(Long id) {
-        return mapper.mapToDto(repository.findById(id));
+    public LongAlbumDto findById(Long id) {
+        return longAlbumDtoMapper.mapToLongDto(repository.findById(id));
     }
 
     @Override
-    public AlbumDto saveAlbum(AlbumDto albumDto) {
-        return mapper.mapToDto(repository.saveAlbum(mapper.mapToObject(albumDto)));
+    public LongAlbumDto saveAlbum(ShortAlbumDto shortAlbumDto) {
+        return longAlbumDtoMapper.mapToLongDto(repository
+                .saveAlbum(shortAlbumDtoMapper.mapToObjectFromShort(shortAlbumDto)));
     }
 
     @Override
-    public AlbumDto updateAlbum(AlbumDto albumDto) {
-        return mapper.mapToDto(repository.updateAlbum(mapper.mapToObject(albumDto)));
+    public LongAlbumDto updateAlbum(ShortAlbumDto shortAlbumDto) {
+        return longAlbumDtoMapper.mapToLongDto(repository
+                .updateAlbum(shortAlbumDtoMapper.mapToObjectFromShort(shortAlbumDto)));
     }
 
     @Override
@@ -45,7 +50,7 @@ public class InMemoryAlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public List<AlbumDto> findByYear(Long year) {
-        return mapper.mapToDtoList(repository.findByYear(year));
+    public List<LongAlbumDto> findByYear(Long year) {
+        return longAlbumDtoMapper.mapToLongDtoList(repository.findByYear(year));
     }
 }

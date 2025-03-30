@@ -1,7 +1,9 @@
 package com.ragnarock.musicrecommends.services.implementations;
 
-import com.ragnarock.musicrecommends.dto.AuthorDto;
-import com.ragnarock.musicrecommends.mappers.AuthorMapper;
+import com.ragnarock.musicrecommends.dto.longdto.LongAuthorDto;
+import com.ragnarock.musicrecommends.dto.shortdto.ShortAuthorDto;
+import com.ragnarock.musicrecommends.mappers.longmapper.LongAuthorDtoMapper;
+import com.ragnarock.musicrecommends.mappers.shortmappers.ShortAuthorDtoMapper;
 import com.ragnarock.musicrecommends.repository.AuthorRepository;
 import com.ragnarock.musicrecommends.services.AuthorService;
 import java.util.List;
@@ -15,31 +17,34 @@ import org.springframework.transaction.annotation.Transactional;
 @Primary
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository repository;
-    private final AuthorMapper mapper;
+    private final LongAuthorDtoMapper longAuthorDtoMapper;
+    private final ShortAuthorDtoMapper shortAuthorDtoMapper;
 
     @Override
-    public List<AuthorDto> findAll() {
-        return mapper.mapToDtoList(repository.findAll());
+    public List<LongAuthorDto> findAll() {
+        return longAuthorDtoMapper.mapToLongDtoList(repository.findAll());
     }
 
     @Override
-    public List<AuthorDto> findByNameAndGenre(String name, String genre) {
-        return mapper.mapToDtoList(repository.findByNameAndGenre(name, genre));
+    public List<LongAuthorDto> findByNameAndGenre(String name, String genre) {
+        return longAuthorDtoMapper.mapToLongDtoList(repository.findByNameAndGenre(name, genre));
     }
 
     @Override
-    public AuthorDto findById(Long id) {
-        return mapper.mapToDto(repository.findById(id).orElse(null));
+    public LongAuthorDto findById(Long id) {
+        return longAuthorDtoMapper.mapToLongDto(repository.findById(id).orElse(null));
     }
 
     @Override
-    public AuthorDto saveAuthor(AuthorDto authorDto) {
-        return mapper.mapToDto(repository.save(mapper.mapToObject(authorDto)));
+    public LongAuthorDto saveAuthor(ShortAuthorDto shortAuthorDto) {
+        return longAuthorDtoMapper.mapToLongDto(repository
+                .save(shortAuthorDtoMapper.mapToObjectFromShort(shortAuthorDto)));
     }
 
     @Override
-    public AuthorDto updateAuthor(AuthorDto authorDto) {
-        return mapper.mapToDto(repository.save(mapper.mapToObject(authorDto)));
+    public LongAuthorDto updateAuthor(ShortAuthorDto shortAuthorDto) {
+        return longAuthorDtoMapper.mapToLongDto(repository
+                .save(shortAuthorDtoMapper.mapToObjectFromShort(shortAuthorDto)));
     }
 
     @Override
