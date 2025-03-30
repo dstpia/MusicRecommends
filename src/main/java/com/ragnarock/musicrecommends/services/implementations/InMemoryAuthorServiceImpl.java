@@ -2,7 +2,7 @@ package com.ragnarock.musicrecommends.services.implementations;
 
 import com.ragnarock.musicrecommends.dto.longdto.LongAuthorDto;
 import com.ragnarock.musicrecommends.dto.shortdto.ShortAuthorDto;
-import com.ragnarock.musicrecommends.mappers.longmapper.LongAuthorDtoMapper;
+import com.ragnarock.musicrecommends.mappers.longmappers.LongAuthorDtoMapper;
 import com.ragnarock.musicrecommends.mappers.shortmappers.ShortAuthorDtoMapper;
 import com.ragnarock.musicrecommends.repository.InMemoryAuthorDao;
 import com.ragnarock.musicrecommends.services.AuthorService;
