@@ -36,12 +36,14 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
+    @Transactional
     public LongAlbumDto saveAlbum(ShortAlbumDto shortAlbumDto) {
         return longAlbumDtoMapper.mapToLongDto(repository
                 .save(shortAlbumDtoMapper.mapToObjectFromShort(shortAlbumDto)));
     }
 
     @Override
+    @Transactional
     public LongAlbumDto updateAlbum(ShortAlbumDto shortAlbumDto) {
         return longAlbumDtoMapper.mapToLongDto(repository
                 .save(shortAlbumDtoMapper.mapToObjectFromShort(shortAlbumDto)));

@@ -36,12 +36,14 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
+    @Transactional
     public LongSongDto saveSong(ShortSongDto shortSongDto) {
         return longSongDtoMapper.mapToLongDto(repository
                 .save(shortSongDtoMapper.mapToObjectFromShort(shortSongDto)));
     }
 
     @Override
+    @Transactional
     public LongSongDto updateSong(ShortSongDto shortSongDto) {
         return longSongDtoMapper.mapToLongDto(repository
                 .save(shortSongDtoMapper.mapToObjectFromShort(shortSongDto)));

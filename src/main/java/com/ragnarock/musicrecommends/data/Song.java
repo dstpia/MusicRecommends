@@ -1,6 +1,6 @@
 package com.ragnarock.musicrecommends.data;
 
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.lang.Nullable;
 
 @Data
 @Entity
@@ -23,14 +24,15 @@ public class Song {
     private String name;
     private String lyrics;
     @ManyToOne
+    @JoinColumn(name = "album_id")
     @ToString.Exclude
     @Nullable
     private Album album;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "songs_authors",
-            joinColumns = @JoinColumn(name = "songId"),
-            inverseJoinColumns = @JoinColumn(name = "authorId")
+            joinColumns = @JoinColumn(name = "song_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     @ToString.Exclude
     @Nullable

@@ -1,6 +1,6 @@
 package com.ragnarock.musicrecommends.data;
 
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -12,6 +12,9 @@ import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.lang.Nullable;
 
 @Data
 @Entity
@@ -22,16 +25,17 @@ public class Author {
     private Long id;
     private String name;
     private String genre;
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
     @Nullable
     private List<Album> albums;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(
             name = "songs_authors",
-            joinColumns = @JoinColumn(name = "authorId"),
-            inverseJoinColumns = @JoinColumn(name = "songId")
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "song_id")
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
     @Nullable
     private List<Song> songs;

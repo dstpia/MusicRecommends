@@ -22,16 +22,18 @@ public class ShortAuthorDtoMapperImpl implements ShortAuthorDtoMapper {
     @Override
     public ShortAuthorDto mapToShortDto(Author author) {
         ShortAuthorDto shortAuthorDto = new ShortAuthorDto();
-        shortAuthorDto.setId(author.getId());
-        shortAuthorDto.setName(author.getName());
-        shortAuthorDto.setGenre(author.getGenre());
-        if (author.getAlbums() != null) {
-            shortAuthorDto.setAlbumsId(author.getAlbums().stream()
-                    .map(Album::getId).collect(Collectors.toList()));
-        }
-        if (author.getSongs() != null) {
-            shortAuthorDto.setSongsId(author.getSongs().stream()
-                    .map(Song::getId).collect(Collectors.toList()));
+        if (author != null) {
+            shortAuthorDto.setId(author.getId());
+            shortAuthorDto.setName(author.getName());
+            shortAuthorDto.setGenre(author.getGenre());
+            if (author.getAlbums() != null) {
+                shortAuthorDto.setAlbumsId(author.getAlbums().stream()
+                        .map(Album::getId).collect(Collectors.toList()));
+            }
+            if (author.getSongs() != null) {
+                shortAuthorDto.setSongsId(author.getSongs().stream()
+                        .map(Song::getId).collect(Collectors.toList()));
+            }
         }
         return shortAuthorDto;
     }
@@ -39,14 +41,16 @@ public class ShortAuthorDtoMapperImpl implements ShortAuthorDtoMapper {
     @Override
     public Author mapToObjectFromShort(ShortAuthorDto shortAuthorDto) {
         Author author = new Author();
-        author.setId(shortAuthorDto.getId());
-        author.setName(shortAuthorDto.getName());
-        author.setGenre(shortAuthorDto.getGenre());
-        if (shortAuthorDto.getAlbumsId() != null) {
-            author.setAlbums(albumRepository.findAllById(shortAuthorDto.getAlbumsId()));
-        }
-        if (shortAuthorDto.getSongsId() != null) {
-            author.setSongs(songRepository.findAllById(shortAuthorDto.getSongsId()));
+        if (shortAuthorDto != null) {
+            author.setId(shortAuthorDto.getId());
+            author.setName(shortAuthorDto.getName());
+            author.setGenre(shortAuthorDto.getGenre());
+            if (shortAuthorDto.getAlbumsId() != null) {
+                author.setAlbums(albumRepository.findAllById(shortAuthorDto.getAlbumsId()));
+            }
+            if (shortAuthorDto.getSongsId() != null) {
+                author.setSongs(songRepository.findAllById(shortAuthorDto.getSongsId()));
+            }
         }
         return author;
     }
@@ -54,14 +58,18 @@ public class ShortAuthorDtoMapperImpl implements ShortAuthorDtoMapper {
     @Override
     public List<ShortAuthorDto> mapToShortDtoList(List<Author> authors) {
         List<ShortAuthorDto> authorsDto = new ArrayList<>();
-        authors.forEach(author -> authorsDto.add(mapToShortDto(author)));
+        if (authors != null) {
+            authors.forEach(author -> authorsDto.add(mapToShortDto(author)));
+        }
         return authorsDto;
     }
 
     @Override
     public List<Author> mapToObjectListFromShort(List<ShortAuthorDto> authorsDto) {
         List<Author> authors = new ArrayList<>();
-        authorsDto.forEach(authorDto -> authors.add(mapToObjectFromShort(authorDto)));
+        if (authorsDto != null) {
+            authorsDto.forEach(authorDto -> authors.add(mapToObjectFromShort(authorDto)));
+        }
         return authors;
     }
 }

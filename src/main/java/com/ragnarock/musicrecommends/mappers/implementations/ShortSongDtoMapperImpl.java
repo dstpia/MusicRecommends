@@ -21,15 +21,17 @@ public class ShortSongDtoMapperImpl implements ShortSongDtoMapper {
     @Override
     public ShortSongDto mapToShortDto(Song song) {
         ShortSongDto shortSongDto = new ShortSongDto();
-        shortSongDto.setId(song.getId());
-        shortSongDto.setName(song.getName());
-        shortSongDto.setLyrics(song.getLyrics());
-        if (song.getAlbum() != null) {
-            shortSongDto.setAlbumId(song.getAlbum().getId());
-        }
-        if (song.getAuthors() != null) {
-            shortSongDto.setAuthorsId(song.getAuthors().stream()
-                    .map(Author::getId).collect(Collectors.toList()));
+        if (song != null) {
+            shortSongDto.setId(song.getId());
+            shortSongDto.setName(song.getName());
+            shortSongDto.setLyrics(song.getLyrics());
+            if (song.getAlbum() != null) {
+                shortSongDto.setAlbumId(song.getAlbum().getId());
+            }
+            if (song.getAuthors() != null) {
+                shortSongDto.setAuthorsId(song.getAuthors().stream()
+                        .map(Author::getId).collect(Collectors.toList()));
+            }
         }
         return shortSongDto;
     }
@@ -37,15 +39,17 @@ public class ShortSongDtoMapperImpl implements ShortSongDtoMapper {
     @Override
     public Song mapToObjectFromShort(ShortSongDto shortSongDto) {
         Song song = new Song();
-        song.setId(shortSongDto.getId());
-        song.setName(shortSongDto.getName());
-        song.setLyrics(shortSongDto.getLyrics());
-        if (shortSongDto.getAlbumId() != null) {
-            song.setAlbum(albumRepository.findById(shortSongDto.getAlbumId())
-                    .orElse(null));
-        }
-        if (shortSongDto.getAuthorsId() != null) {
-            song.setAuthors(authorRepository.findAllById(shortSongDto.getAuthorsId()));
+        if (shortSongDto != null) {
+            song.setId(shortSongDto.getId());
+            song.setName(shortSongDto.getName());
+            song.setLyrics(shortSongDto.getLyrics());
+            if (shortSongDto.getAlbumId() != null) {
+                song.setAlbum(albumRepository.findById(shortSongDto.getAlbumId())
+                        .orElse(null));
+            }
+            if (shortSongDto.getAuthorsId() != null) {
+                song.setAuthors(authorRepository.findAllById(shortSongDto.getAuthorsId()));
+            }
         }
         return song;
     }
@@ -53,14 +57,18 @@ public class ShortSongDtoMapperImpl implements ShortSongDtoMapper {
     @Override
     public List<ShortSongDto> mapToShortDtoList(List<Song> songs) {
         List<ShortSongDto> songsDto = new ArrayList<>();
-        songs.forEach(song -> songsDto.add(mapToShortDto(song)));
+        if (songs != null) {
+            songs.forEach(song -> songsDto.add(mapToShortDto(song)));
+        }
         return songsDto;
     }
 
     @Override
     public List<Song> mapToObjectListFromShort(List<ShortSongDto> songsDto) {
         List<Song> songs = new ArrayList<>();
-        songsDto.forEach(songDto -> songs.add(mapToObjectFromShort(songDto)));
+        if (songsDto != null) {
+            songsDto.forEach(songDto -> songs.add(mapToObjectFromShort(songDto)));
+        }
         return songs;
     }
 }

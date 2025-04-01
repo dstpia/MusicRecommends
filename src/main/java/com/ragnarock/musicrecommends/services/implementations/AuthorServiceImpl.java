@@ -36,12 +36,14 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public LongAuthorDto saveAuthor(ShortAuthorDto shortAuthorDto) {
         return longAuthorDtoMapper.mapToLongDto(repository
                 .save(shortAuthorDtoMapper.mapToObjectFromShort(shortAuthorDto)));
     }
 
     @Override
+    @Transactional
     public LongAuthorDto updateAuthor(ShortAuthorDto shortAuthorDto) {
         return longAuthorDtoMapper.mapToLongDto(repository
                 .save(shortAuthorDtoMapper.mapToObjectFromShort(shortAuthorDto)));
