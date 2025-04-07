@@ -12,13 +12,13 @@ public interface AlbumService {
 
     List<LongAlbumDto> findByNameAndGenre(String name, String genre);
 
+    List<LongAlbumDto> findByYear(Long year);
+
     LongAlbumDto findById(Long id);
 
     LongAlbumDto saveAlbum(ShortAlbumDto album);
 
     LongAlbumDto updateAlbum(ShortAlbumDto album);
 
-    void deleteAlbum(Long id);
-
-    List<LongAlbumDto> findByYear(Long year);
+    boolean deleteAlbum(Long id);
 }

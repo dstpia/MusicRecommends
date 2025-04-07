@@ -8,6 +8,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Data;
@@ -28,13 +30,21 @@ public class Song {
     @ToString.Exclude
     @Nullable
     private Album album;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "songs_authors",
             joinColumns = @JoinColumn(name = "song_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
-    @ToString.Exclude
     @Nullable
     private List<Author> authors;
+
+    @PrePersist
+    @PreUpdate
+    private void format() {
+        if (lyrics != null && !lyrics.isEmpty()) {
+            this.lyrics = this.lyrics.substring(0, 1).toUpperCase()
+                    + this.lyrics.substring(1).toLowerCase();
+        }
+    }
 }

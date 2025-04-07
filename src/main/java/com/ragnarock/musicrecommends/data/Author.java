@@ -8,6 +8,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.util.List;
 import lombok.Data;
@@ -39,4 +41,12 @@ public class Author {
     @ToString.Exclude
     @Nullable
     private List<Song> songs;
+
+    @PrePersist
+    @PreUpdate
+    private void format() {
+        if (this.genre != null && !this.genre.isEmpty()) {
+            this.genre = this.genre.toLowerCase();
+        }
+    }
 }

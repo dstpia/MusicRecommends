@@ -45,7 +45,8 @@ public class InMemoryAuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public void deleteAuthor(Long id) {
+    public boolean deleteAuthor(Long id) {
         repository.deleteAuthor(repository.findById(id));
+        return true;
     }
 }

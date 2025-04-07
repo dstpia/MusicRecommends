@@ -28,6 +28,11 @@ public class InMemoryAlbumServiceImpl implements AlbumService {
     }
 
     @Override
+    public List<LongAlbumDto> findByYear(Long year) {
+        return longAlbumDtoMapper.mapToLongDtoList(repository.findByYear(year));
+    }
+
+    @Override
     public LongAlbumDto findById(Long id) {
         return longAlbumDtoMapper.mapToLongDto(repository.findById(id));
     }
@@ -45,12 +50,8 @@ public class InMemoryAlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public void deleteAlbum(Long id) {
+    public boolean deleteAlbum(Long id) {
         repository.deleteAlbum(repository.findById(id));
-    }
-
-    @Override
-    public List<LongAlbumDto> findByYear(Long year) {
-        return longAlbumDtoMapper.mapToLongDtoList(repository.findByYear(year));
+        return true;
     }
 }

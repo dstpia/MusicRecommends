@@ -7,12 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface AlbumRepository extends JpaRepository<Album, Long> {
-    @Query("SELECT s FROM Album s WHERE "
-            + "(:name IS NULL OR s.name = :name) AND "
-            + "(:genre IS NULL OR s.genre = :genre)")
+    @Query("SELECT a FROM Album a"
+            + " WHERE (:name IS NULL OR a.name = :name)"
+            + " AND (:genre IS NULL OR a.genre = :genre)")
     List<Album> findByNameAndGenre(@Param("name") String name, @Param("genre") String genre);
 
-    @Query("SELECT s FROM Album s WHERE "
-            + "(:year IS NULL OR s.year = :year)")
+    @Query("SELECT a FROM Album a WHERE (:year IS NULL OR a.year = :year)")
     List<Album> findByYear(@Param("year") Long year);
 }

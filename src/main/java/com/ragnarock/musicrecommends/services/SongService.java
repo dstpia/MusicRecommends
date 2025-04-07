@@ -14,9 +14,13 @@ public interface SongService {
 
     LongSongDto findById(Long id);
 
+    List<LongSongDto> findByAlbumYear(Long year);
+
+    List<LongSongDto> findByAlbumGenre(String genre);
+
     LongSongDto saveSong(ShortSongDto shortSongDto);
 
     LongSongDto updateSong(ShortSongDto shortSongDto);
 
-    void deleteSong(Long id);
+    boolean deleteSong(Long id);
 }
