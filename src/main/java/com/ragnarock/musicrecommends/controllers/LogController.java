@@ -40,13 +40,11 @@ public class LogController {
             log.error("Log directory does not exist");
             return ResponseEntity.notFound().build();
         }
-
         String[] logFiles = logDirectory.list((dir, name) -> name.endsWith(".log"));
         if (logFiles == null || logFiles.length == 0) {
             log.info("No log files found in directory");
             return ResponseEntity.ok(new String[0]);
         }
-
         log.info("Found {} log files", logFiles.length);
         return ResponseEntity.ok(logFiles);
     }
@@ -118,7 +116,6 @@ public class LogController {
                 .format(new Date())).append("\n");
         return logBuilder.toString();
     }
-
 
     private boolean isValidDate(String dateStr) {
         try {
