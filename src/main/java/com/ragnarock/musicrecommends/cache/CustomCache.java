@@ -22,12 +22,12 @@ import org.springframework.stereotype.Component;
 public class CustomCache<K, V> {
     private final Map<K, CacheEntry<V>> cache = new LinkedHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private static final long ttlMillis = 10000; //Временно установлено на 10 сек
-    private static final int maxSize = 1000;
+    private static final long TTL_MILLIS = 10000; //Временно установлено на 10 сек
+    private static final int MAX_SIZE = 1000;
     private boolean initialized = false;
 
     public CustomCache() {
-        log.info("Cache initialized, ttl: {} (seconds), maxSize: {}", ttlMillis / 1000, maxSize);
+        log.info("Cache initialized, ttl: {} (seconds), max size: {}", TTL_MILLIS / 1000, MAX_SIZE);
         init();
     }
 
@@ -36,14 +36,14 @@ public class CustomCache<K, V> {
         if (!initialized) {
             initialized = true;
             scheduler.scheduleAtFixedRate(this::deletingExpiredEntries,
-                    0, ttlMillis / 1000, TimeUnit.SECONDS);
+                    0, TTL_MILLIS / 1000, TimeUnit.SECONDS);
             log.info("Scheduler initialized");
         }
     }
 
     public void putInCache(K key, V value) {
         synchronized (cache) {
-            if (cache.size() >= maxSize) {
+            if (cache.size() >= MAX_SIZE) {
                 Iterator<K> iterator = cache.keySet().iterator();
                 if (iterator.hasNext()) {
                     K oldestKey = iterator.next();
@@ -52,7 +52,8 @@ public class CustomCache<K, V> {
                 }
             }
             cache.put(key, new CacheEntry<>(value, Instant.now().toEpochMilli()));
-            log.info("Put into cache: key = {}, value = {}", key, value);
+            log.info("Put into cache: key = {}, value = {}, current size: {}",
+                    key, value, cacheCurrentSize());
         }
     }
 
@@ -66,7 +67,8 @@ public class CustomCache<K, V> {
             }
             if (isExpired(entry)) {
                 cache.remove(key);
-                log.info("Cache entry expired for key: {}", key);
+                log.info("Cache entry expired for key: {}, current size: {}",
+                        key, cacheCurrentSize());
                 return null;
             }
             cache.put(key, new CacheEntry<>(entry.value, Instant.now().toEpochMilli()));
@@ -79,7 +81,8 @@ public class CustomCache<K, V> {
         synchronized (cache) {
             if (cache.containsKey(key)) {
                 cache.remove(key);
-                log.info("Removed from cache: key = {}", key);
+                log.info("Removed from cache: key = {}, current size: {}",
+                        key, cacheCurrentSize());
             }
         }
     }
@@ -143,7 +146,8 @@ public class CustomCache<K, V> {
             while (iterator.hasNext()) {
                 Map.Entry<K, CacheEntry<V>> entry = iterator.next();
                 if (isExpired(entry.getValue())) {
-                    log.info("Deleting expired cache entry for key: {}", entry.getKey());
+                    log.info("Deleting expired cache entry for key: {}, current size: {}",
+                            entry.getKey(), cacheCurrentSize());
                     iterator.remove();
                 }
             }
@@ -151,7 +155,7 @@ public class CustomCache<K, V> {
     }
 
     private boolean isExpired(CacheEntry<V> entry) {
-        return (Instant.now().toEpochMilli() - entry.timestamp) > ttlMillis;
+        return (Instant.now().toEpochMilli() - entry.timestamp) > TTL_MILLIS;
     }
 
     @PreDestroy
