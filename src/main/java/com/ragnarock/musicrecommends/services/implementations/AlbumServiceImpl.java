@@ -29,8 +29,6 @@ public class AlbumServiceImpl implements AlbumService {
     public List<LongAlbumDto> findAll() {
         List<LongAlbumDto> longAlbumDtoList;
         longAlbumDtoList = longAlbumDtoMapper.mapToLongDtoList(repository.findAll());
-        longAlbumDtoList.forEach(longAlbumDto -> {
-            albumCache.putInCache(longAlbumDto.getId(), longAlbumDto); });
         log.info("Found in repository {} albums", longAlbumDtoList.size());
         return longAlbumDtoList;
     }
@@ -43,18 +41,35 @@ public class AlbumServiceImpl implements AlbumService {
         } else {
             normalizedGenre = null;
         }
-        List<LongAlbumDto> longAlbumDtoList;
+        List<LongAlbumDto> longAlbumDtoList = null;
         if (albumCache.notEmptyCheck() && (albumCache.cacheCurrentSize() == repository.count())) {
-            longAlbumDtoList = albumCache.getValues();
-            longAlbumDtoList.stream()
-                    .filter(longAlbumDto -> longAlbumDto.getName().equals(name))
-                    .filter(longAlbumDto -> longAlbumDto.getGenre().equals(normalizedGenre))
-                    .sorted(Comparator.comparing(LongAlbumDto::getId))
-                    .forEach(longAlbumDto -> {
-                        albumCache.putInCache(longAlbumDto.getId(), longAlbumDto); });
+            longAlbumDtoList = albumCache.getValues().stream()
+                    .filter(longAlbumDto -> {
+                        if (name != null) {
+                            if (longAlbumDto.getName() != null) {
+                                return longAlbumDto.getName().equals(name);
+                            }
+                            return false;
+                        }
+                        return true;
+                    })
+                    .filter(longAlbumDto -> {
+                        if (normalizedGenre != null) {
+                            if (longAlbumDto.getGenre() != null) {
+                                return longAlbumDto.getGenre().equals(normalizedGenre);
+                            }
+                            return false;
+                        }
+                        return true;
+                    })
+                    .sorted(Comparator.comparing(LongAlbumDto::getId)).toList();
+            longAlbumDtoList.forEach(longAlbumDto -> {
+                albumCache.putInCache(longAlbumDto.getId(), longAlbumDto); });
             log.info("Found in cache {} albums with searched name and genre",
                     longAlbumDtoList.size());
-        } else {
+        }
+        if ((longAlbumDtoList != null) && (longAlbumDtoList.size()
+                != repository.findByNameAndGenre(name, normalizedGenre).size())) {
             longAlbumDtoList = longAlbumDtoMapper
                     .mapToLongDtoList(repository.findByNameAndGenre(name, normalizedGenre));
             longAlbumDtoList.forEach(longAlbumDto -> {
@@ -62,37 +77,44 @@ public class AlbumServiceImpl implements AlbumService {
             log.info("Found in repository {} albums with searched name and genre",
                     longAlbumDtoList.size());
         }
+        if (longAlbumDtoList != null) {
+            log.info("Found in cache {} albums", longAlbumDtoList.size());
+        }
         return longAlbumDtoList;
     }
 
     @Override
     public List<LongAlbumDto> findByYear(Long year) {
-        List<LongAlbumDto> longAlbumDtoList;
+        List<LongAlbumDto> longAlbumDtoList = null;
         if (albumCache.notEmptyCheck() && (albumCache.cacheCurrentSize() == repository.count())) {
-            longAlbumDtoList = albumCache.getValues();
-            longAlbumDtoList.stream()
+            longAlbumDtoList = albumCache.getValues().stream()
                     .filter(longAlbumDto -> {
                         if (longAlbumDto.getYear() != null) {
                             return longAlbumDto.getYear().equals(year);
                         }
                         return false;
                     })
-                    .sorted(Comparator.comparing(LongAlbumDto::getId))
-                    .forEach(longAlbumDto -> {
-                        albumCache.putInCache(longAlbumDto.getId(), longAlbumDto); });
+                    .sorted(Comparator.comparing(LongAlbumDto::getId)).toList();
+            longAlbumDtoList.forEach(longAlbumDto -> {
+                albumCache.putInCache(longAlbumDto.getId(), longAlbumDto); });
             log.info("Found in cache {} albums with searched year", longAlbumDtoList.size());
-        } else {
+        }
+        if ((longAlbumDtoList != null)
+                && (longAlbumDtoList.size() != repository.findByYear(year).size())) {
             longAlbumDtoList = longAlbumDtoMapper.mapToLongDtoList(repository.findByYear(year));
             longAlbumDtoList.forEach(longAlbumDto -> {
                 albumCache.putInCache(longAlbumDto.getId(), longAlbumDto); });
             log.info("Found in repository {} albums with searched year", longAlbumDtoList.size());
+        }
+        if (longAlbumDtoList != null) {
+            log.info("Final count of albums: {}", longAlbumDtoList.size());
         }
         return longAlbumDtoList;
     }
 
     @Override
     public LongAlbumDto findById(Long id) {
-        LongAlbumDto longAlbumDto;
+        LongAlbumDto longAlbumDto = null;
         if (albumCache.notEmptyCheck() && (albumCache.cacheCurrentSize() == repository.count())) {
             longAlbumDto = albumCache.getFromCache(id);
             if (longAlbumDto != null) {
@@ -100,7 +122,8 @@ public class AlbumServiceImpl implements AlbumService {
                 log.info("Found in cache album with searched id: {}",
                         longAlbumDto.getId());
             }
-        } else {
+        }
+        if (longAlbumDto == null) {
             longAlbumDto = longAlbumDtoMapper.mapToLongDto(repository.findById(id).orElse(null));
             if (longAlbumDto != null) {
                 albumCache.putInCache(longAlbumDto.getId(), longAlbumDto);
@@ -134,7 +157,7 @@ public class AlbumServiceImpl implements AlbumService {
             log.info("Updated in cache and repository album, id: {}", longAlbumDto.getId());
         } else {
             longAlbumDto = null;
-            log.error("Can't update album with searched id: {}", shortAlbumDto.getId());
+            log.error("[404]: Can't update album with searched id: {}", shortAlbumDto.getId());
         }
         return longAlbumDto;
     }
@@ -143,14 +166,14 @@ public class AlbumServiceImpl implements AlbumService {
     @Transactional
     public boolean deleteAlbum(Long id) {
         if (repository.existsById(id)) {
-            if (albumCache.notEmptyCheck() && (albumCache.cacheCurrentSize() == repository.count())) {
+            if (albumCache.notEmptyCheck()) {
                 albumCache.removeFromCache(id);
             }
             repository.deleteById(id);
             log.info("Deleted in cache and repository album, id: {}", id);
             return true;
         } else {
-            log.error("Can't delete album with searched id: {}", id);
+            log.error("[404]: Can't delete album with searched id: {}", id);
             return false;
         }
     }

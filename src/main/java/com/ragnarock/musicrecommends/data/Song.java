@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Data;
 import lombok.ToString;
@@ -23,7 +24,9 @@ public class Song {
     @Id
     @GeneratedValue
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private String lyrics;
     @ManyToOne
     @JoinColumn(name = "album_id")
@@ -42,7 +45,7 @@ public class Song {
     @PrePersist
     @PreUpdate
     private void format() {
-        if (lyrics != null && !lyrics.isEmpty()) {
+        if (!lyrics.isEmpty()) {
             this.lyrics = this.lyrics.substring(0, 1).toUpperCase()
                     + this.lyrics.substring(1).toLowerCase();
         }

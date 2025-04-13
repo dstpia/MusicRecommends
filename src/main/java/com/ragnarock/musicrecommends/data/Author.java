@@ -11,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Data;
 import lombok.ToString;
@@ -25,7 +26,9 @@ public class Author {
     @Id
     @GeneratedValue
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private String genre;
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
@@ -45,7 +48,7 @@ public class Author {
     @PrePersist
     @PreUpdate
     private void format() {
-        if (this.genre != null && !this.genre.isEmpty()) {
+        if (!this.genre.isEmpty()) {
             this.genre = this.genre.toLowerCase();
         }
     }

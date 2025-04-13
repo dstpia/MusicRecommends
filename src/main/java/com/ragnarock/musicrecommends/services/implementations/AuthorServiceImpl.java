@@ -29,8 +29,6 @@ public class AuthorServiceImpl implements AuthorService {
     public List<LongAuthorDto> findAll() {
         List<LongAuthorDto> longAuthorDtoList;
         longAuthorDtoList = longAuthorDtoMapper.mapToLongDtoList(repository.findAll());
-        longAuthorDtoList.forEach(longAuthorDto -> {
-            authorCache.putInCache(longAuthorDto.getId(), longAuthorDto); });
         log.info("Found in repository {} authors", longAuthorDtoList.size());
         return longAuthorDtoList;
     }
@@ -43,18 +41,35 @@ public class AuthorServiceImpl implements AuthorService {
         } else {
             normalizedGenre = null;
         }
-        List<LongAuthorDto> longAuthorDtoList;
+        List<LongAuthorDto> longAuthorDtoList = null;
         if (authorCache.notEmptyCheck() && (authorCache.cacheCurrentSize() == repository.count())) {
-            longAuthorDtoList = authorCache.getValues();
-            longAuthorDtoList.stream()
-                    .filter(authorDto -> authorDto.getName().equals(name))
-                    .filter(authorDto -> authorDto.getGenre().equals(normalizedGenre))
-                    .sorted(Comparator.comparing(LongAuthorDto::getId))
-                    .forEach(authorDto -> {
-                        authorCache.putInCache(authorDto.getId(), authorDto); });
+            longAuthorDtoList = authorCache.getValues().stream()
+                    .filter(authorDto -> {
+                        if (name != null) {
+                            if (authorDto.getName() != null) {
+                                return authorDto.getName().equals(name);
+                            }
+                            return false;
+                        }
+                        return true;
+                    })
+                    .filter(authorDto -> {
+                        if (normalizedGenre != null) {
+                            if (authorDto.getGenre() != null) {
+                                return authorDto.getGenre().equals(normalizedGenre);
+                            }
+                            return false;
+                        }
+                        return true;
+                    })
+                    .sorted(Comparator.comparing(LongAuthorDto::getId)).toList();
+            longAuthorDtoList.forEach(authorDto -> {
+                authorCache.putInCache(authorDto.getId(), authorDto); });
             log.info("Found in cache {} authors with searched name and genre",
                     longAuthorDtoList.size());
-        } else {
+        }
+        if ((longAuthorDtoList != null) && (longAuthorDtoList.size()
+                != repository.findByNameAndGenre(name, genre).size())) {
             longAuthorDtoList = longAuthorDtoMapper
                     .mapToLongDtoList(repository.findByNameAndGenre(name, normalizedGenre));
             longAuthorDtoList.forEach(longAuthorDto -> {
@@ -62,19 +77,23 @@ public class AuthorServiceImpl implements AuthorService {
             log.info("Found in repository {} authors with searched name and genre",
                     longAuthorDtoList.size());
         }
+        if (longAuthorDtoList != null) {
+            log.info("Final count of authors: {}", longAuthorDtoList.size());
+        }
         return longAuthorDtoList;
     }
 
     @Override
     public LongAuthorDto findById(Long id) {
-        LongAuthorDto longAuthorDto;
+        LongAuthorDto longAuthorDto = null;
         if (authorCache.notEmptyCheck() && (authorCache.cacheCurrentSize() == repository.count())) {
             longAuthorDto = authorCache.getFromCache(id);
             if (longAuthorDto != null) {
                 authorCache.putInCache(longAuthorDto.getId(), longAuthorDto);
                 log.info("Found in cache author with searched id: {}", longAuthorDto.getId());
             }
-        } else {
+        }
+        if (longAuthorDto == null) {
             longAuthorDto = longAuthorDtoMapper.mapToLongDto(repository.findById(id).orElse(null));
             if (longAuthorDto != null) {
                 authorCache.putInCache(longAuthorDto.getId(), longAuthorDto);
@@ -93,6 +112,8 @@ public class AuthorServiceImpl implements AuthorService {
         if (longAuthorDto != null) {
             authorCache.putInCache(longAuthorDto.getId(), longAuthorDto);
             log.info("Saved in cache and repository author, id: {}", longAuthorDto.getId());
+        } else {
+            log.error("Failed to save new author");
         }
         return longAuthorDto;
     }
@@ -108,7 +129,7 @@ public class AuthorServiceImpl implements AuthorService {
             log.info("Updated in cache and repository author, id: {}", longAuthorDto.getId());
         } else {
             longAuthorDto = null;
-            log.error("Can't update author with searched id: {}", shortAuthorDto.getId());
+            log.error("[404]: Can't update author with searched id: {}", shortAuthorDto.getId());
         }
         return longAuthorDto;
     }
@@ -117,14 +138,14 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional
     public boolean deleteAuthor(Long id) {
         if (repository.existsById(id)) {
-            if (authorCache.notEmptyCheck() && (authorCache.cacheCurrentSize() == repository.count())) {
+            if (authorCache.notEmptyCheck()) {
                 authorCache.removeFromCache(id);
             }
             repository.deleteById(id);
             log.info("Deleted in cache and repository author, id: {}", id);
             return true;
         } else {
-            log.error("Can't delete author with searched id: {}", id);
+            log.error("[404]: Can't delete author with searched id: {}", id);
             return false;
         }
     }

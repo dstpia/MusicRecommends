@@ -6,12 +6,14 @@ import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.SongService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/songs")
 @AllArgsConstructor
 @Tag(name = "Song controller", description = "API для работы с песнями")
+@Validated
 public class SongController {
     private final SongService songService;
 
@@ -50,6 +53,7 @@ public class SongController {
             throws UnExistedItemException {
         List<LongSongDto> songs = songService.findByNameAndLyrics(name, lyrics);
         if (songs.isEmpty()) {
+            log.error("[404]: Songs not found, name: {}, lyrics: {}", name, lyrics);
             throw new UnExistedItemException("Songs not found, name: " + name
                     + ", lyrics: " + lyrics);
         }
@@ -65,6 +69,7 @@ public class SongController {
             throws UnExistedItemException {
         LongSongDto song = songService.findById(id);
         if (song.getId() == null) {
+            log.error("[404]: Song not found, id: {}", id);
             throw new UnExistedItemException("Song not found, id: " + id);
         }
         return ResponseEntity.ok(song);
@@ -79,6 +84,7 @@ public class SongController {
             throws UnExistedItemException {
         List<LongSongDto> songs = songService.findByAlbumYear(year);
         if (songs.isEmpty()) {
+            log.error("[404]: Songs not found, year: {}", year);
             throw new UnExistedItemException("Songs not found, year: " + year);
         }
         return ResponseEntity.ok(songs);
@@ -94,6 +100,7 @@ public class SongController {
             throws UnExistedItemException {
         List<LongSongDto> songs = songService.findByAlbumGenre(genre);
         if (songs.isEmpty()) {
+            log.error("[404]: Songs not found, genre: {}", genre);
             throw new UnExistedItemException("Songs not found, genre: " + genre);
         }
         return ResponseEntity.ok(songs);
@@ -102,26 +109,30 @@ public class SongController {
     @PostMapping("/save")
     @Operation(summary = "Сохранить новую песню",
             description = "Сохраняет новую песню в репозитории")
-    @ApiResponse(responseCode = "200", description = "Песня сохранена")
-    public ResponseEntity<LongSongDto> saveSong(@RequestBody ShortSongDto shortSongDto) {
+    @ApiResponse(responseCode = "201", description = "Песня сохранена")
+    public ResponseEntity<LongSongDto> saveSong(
+            @Valid @RequestBody ShortSongDto shortSongDto) {
         LongSongDto song = songService.saveSong(shortSongDto);
-        return ResponseEntity.ok(song);
+        return ResponseEntity.status(HttpStatus.CREATED).body(song);
     }
 
     @PutMapping("/update")
     @Operation(summary = "Обновить информацию о песне",
             description = "Обновляет информацию о существующей песне")
-    @ApiResponse(responseCode = "200", description = "Песня обновлена")
+    @ApiResponse(responseCode = "202", description = "Песня обновлена")
     @ApiResponse(responseCode = "404", description = "Песня не найдена")
-    public ResponseEntity<LongSongDto> updateSong(@RequestBody ShortSongDto shortSongDto)
+    public ResponseEntity<LongSongDto> updateSong(
+            @Valid @RequestBody ShortSongDto shortSongDto)
             throws UnExistedItemException {
         LongSongDto song = songService.updateSong(shortSongDto);
         if (song == null) {
-            log.error("Song not found, impossible to update, id: {}", shortSongDto.getId());
+            log.error("[404]: Song not found, impossible to update, id: {}", shortSongDto.getId());
             throw new UnExistedItemException("Song not found, impossible to update, id: "
                     + shortSongDto.getId());
+        } else {
+            log.info("Song updated, id: {}", song.getId());
         }
-        return ResponseEntity.ok(song);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(song);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -135,7 +146,7 @@ public class SongController {
             log.info("Deleted song with id: {}", id);
             return true;
         } else {
-            log.error("Can't delete song with id: {}", id);
+            log.error("[404]: Can't delete song with id: {}", id);
             throw new UnExistedItemException("Can't delete song with id: " + id);
         }
     }

@@ -12,14 +12,14 @@ public interface SongRepository extends JpaRepository<Song, Long> {
             + " AND (:lyrics IS NULL OR s.lyrics = :lyrics)")
     List<Song> findByNameAndLyrics(@Param("name") String name, @Param("lyrics") String lyrics);
 
-    @Query("SELECT s FROM Song s"
-            + " LEFT JOIN s.album a WHERE (:year IS NULL"
-            + " OR (a IS NOT NULL AND a.year = :year))")
+    @Query("SELECT s FROM Song s "
+            + "LEFT JOIN s.album a "
+            + "WHERE (:year IS NULL OR (a IS NOT NULL AND a.year = :year))")
     List<Song> findByAlbumYear(@Param("year") Long year);
 
-    @Query("SELECT s FROM Song s"
-            + " LEFT JOIN s.album a"
-            + " WHERE (:genre IS NULL OR a.genre = :genre)")
+    @Query("SELECT s FROM Song s "
+            + "LEFT JOIN s.album a "
+            + "WHERE (:genre IS NULL OR (a IS NOT NULL AND a.genre = :genre))")
     List<Song> findByAlbumGenre(@Param("genre") String genre);
 
 }

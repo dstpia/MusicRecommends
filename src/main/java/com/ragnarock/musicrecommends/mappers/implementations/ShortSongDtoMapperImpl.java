@@ -20,7 +20,7 @@ public class ShortSongDtoMapperImpl implements ShortSongDtoMapper {
 
     @Override
     public ShortSongDto mapToShortDto(Song song) {
-        ShortSongDto shortSongDto = new ShortSongDto();
+        ShortSongDto shortSongDto = new ShortSongDto("", "");
         if (song != null) {
             shortSongDto.setId(song.getId());
             shortSongDto.setName(song.getName());

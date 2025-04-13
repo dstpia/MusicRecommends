@@ -6,12 +6,14 @@ import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/authors")
 @AllArgsConstructor
 @Tag(name = "Author controller", description = "API для работы с авторами")
+@Validated
 public class AuthorController {
     private final AuthorService authorService;
 
@@ -51,7 +54,7 @@ public class AuthorController {
         List<LongAuthorDto> authors = authorService.findByNameAndGenre(name, genre);
         log.info("Found {} authors", authors.size());
         if (authors.isEmpty()) {
-            log.error("Authors not found, name: {}, genre: {}", name, genre);
+            log.error("[404]: Authors not found, name: {}, genre: {}", name, genre);
             throw new UnExistedItemException("Authors not found, name: " + name
                     + ", genre: " + genre);
         }
@@ -67,7 +70,7 @@ public class AuthorController {
             throws UnExistedItemException {
         LongAuthorDto author = authorService.findById(id);
         if (author.getId() == null) {
-            log.error("Author not found, id: {}", id);
+            log.error("[404]: Author not found, id: {}", id);
             throw new UnExistedItemException("Author not found, id: " + id);
         }
         log.info("Found author, id: {}", author.getId());
@@ -77,27 +80,31 @@ public class AuthorController {
     @PostMapping("/save")
     @Operation(summary = "Сохранить нового автора",
             description = "Сохраняет нового автора в репозитории")
-    @ApiResponse(responseCode = "200", description = "Автор сохранён")
-    public ResponseEntity<LongAuthorDto> saveAuthor(@RequestBody ShortAuthorDto shortAuthorDto) {
+    @ApiResponse(responseCode = "201", description = "Автор сохранён")
+    public ResponseEntity<LongAuthorDto> saveAuthor(
+            @Valid @RequestBody ShortAuthorDto shortAuthorDto) {
         LongAuthorDto author = authorService.saveAuthor(shortAuthorDto);
-        return ResponseEntity.ok(author);
+        return ResponseEntity.status(HttpStatus.CREATED).body(author);
     }
 
     @PutMapping("/update")
     @Operation(summary = "Обновить информацию об авторе",
             description = "Обновляет информацию о существующем авторе")
-    @ApiResponse(responseCode = "200", description = "Автор обновлён")
+    @ApiResponse(responseCode = "202", description = "Автор обновлён")
     @ApiResponse(responseCode = "404", description = "Автор не найден")
     public ResponseEntity<LongAuthorDto> updateAuthorInfo(
-            @RequestBody ShortAuthorDto shortAuthorDto)
+            @Valid @RequestBody ShortAuthorDto shortAuthorDto)
             throws UnExistedItemException {
         LongAuthorDto author = authorService.updateAuthor(shortAuthorDto);
         if (author == null) {
-            log.error("Author not found, impossible to update, id: {}", shortAuthorDto.getId());
-            throw new UnExistedItemException("Author not found, impossible to update, id:"
-                    + shortAuthorDto.getId());
+            log.error("[404]: Author not found, impossible to update, id: {}",
+                    shortAuthorDto.getId());
+            throw new UnExistedItemException("Author not found, impossible"
+                    + " to update, id:" + shortAuthorDto.getId());
+        } else {
+            log.info("Author updated, id: {}", author.getId());
         }
-        return ResponseEntity.ok(author);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(author);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -111,7 +118,7 @@ public class AuthorController {
             log.info("Deleted author with id: {}", id);
             return true;
         } else {
-            log.error("Can't delete author with id: {}", id);
+            log.error("[404]: Can't delete author with id: {}", id);
             throw new UnExistedItemException("Can't delete author with id: " + id);
         }
     }

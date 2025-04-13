@@ -21,7 +21,7 @@ public class ShortAuthorDtoMapperImpl implements ShortAuthorDtoMapper {
 
     @Override
     public ShortAuthorDto mapToShortDto(Author author) {
-        ShortAuthorDto shortAuthorDto = new ShortAuthorDto();
+        ShortAuthorDto shortAuthorDto = new ShortAuthorDto("", "");
         if (author != null) {
             shortAuthorDto.setId(author.getId());
             shortAuthorDto.setName(author.getName());

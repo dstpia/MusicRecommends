@@ -6,12 +6,14 @@ import com.ragnarock.musicrecommends.exceptions.UnExistedItemException;
 import com.ragnarock.musicrecommends.services.AlbumService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/albums")
 @AllArgsConstructor
 @Tag(name = "Album controller", description = "API для работы с альбомами")
+@Validated
 public class AlbumController {
     private final AlbumService albumService;
 
@@ -50,6 +53,7 @@ public class AlbumController {
             throws UnExistedItemException {
         List<LongAlbumDto> albums = albumService.findByNameAndGenre(name, genre);
         if (albums.isEmpty()) {
+            log.error("[404]: Albums not found, name: {}, genre: {}", name, genre);
             throw new UnExistedItemException("Albums not found, name: " + name
                     + ", genre: " + genre);
         }
@@ -65,6 +69,7 @@ public class AlbumController {
             throws UnExistedItemException {
         LongAlbumDto album = albumService.findById(id);
         if (album.getId() == null) {
+            log.error("[404]: Album not found, id: {}", id);
             throw new UnExistedItemException("Album not found, id: " + id);
         }
         return ResponseEntity.ok(album);
@@ -79,6 +84,7 @@ public class AlbumController {
             throws UnExistedItemException {
         List<LongAlbumDto> albums = albumService.findByYear(year);
         if (albums.isEmpty()) {
+            log.error("[404]: Albums not found, year: {}", year);
             throw new UnExistedItemException("Albums not found, year: " + year);
         }
         return ResponseEntity.ok(albums);
@@ -87,26 +93,31 @@ public class AlbumController {
     @PostMapping("/save")
     @Operation(summary = "Сохранить новый альбом",
             description = "Сохраняет новый альбом в репозитории")
-    @ApiResponse(responseCode = "200", description = "Альбом сохранён")
-    public ResponseEntity<LongAlbumDto> saveAlbum(@RequestBody ShortAlbumDto shortAlbumDto) {
+    @ApiResponse(responseCode = "201", description = "Альбом сохранён")
+    public ResponseEntity<LongAlbumDto> saveAlbum(
+            @Valid @RequestBody ShortAlbumDto shortAlbumDto) {
         LongAlbumDto album = albumService.saveAlbum(shortAlbumDto);
-        return ResponseEntity.ok(album);
+        return ResponseEntity.status(HttpStatus.CREATED).body(album);
     }
 
     @PutMapping("/update")
     @Operation(summary = "Обновить информацию об альбоме",
             description = "Обновляет информацию о существующем альбоме")
-    @ApiResponse(responseCode = "200", description = "Альбом обновлён")
+    @ApiResponse(responseCode = "202", description = "Альбом обновлён")
     @ApiResponse(responseCode = "404", description = "Альбом не найден")
-    public ResponseEntity<LongAlbumDto> updateAlbumInfo(@RequestBody ShortAlbumDto shortAlbumDto)
+    public ResponseEntity<LongAlbumDto> updateAlbumInfo(
+            @Valid @RequestBody ShortAlbumDto shortAlbumDto)
             throws UnExistedItemException {
         LongAlbumDto album = albumService.updateAlbum(shortAlbumDto);
         if (album == null) {
-            log.error("Album not found, impossible to update, id: {}", shortAlbumDto.getId());
+            log.error("[404]: Album not found, impossible to update, id: {}",
+                    shortAlbumDto.getId());
             throw new UnExistedItemException("Album not found, impossible to update, id: "
                     + shortAlbumDto.getId());
+        } else {
+            log.info("Album updated, id: {}", album.getId());
         }
-        return ResponseEntity.ok(album);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(album);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -120,7 +131,7 @@ public class AlbumController {
             log.info("Deleted album with id: {}", id);
             return true;
         } else {
-            log.error("Can't delete album with id: {}", id);
+            log.error("[404]: Can't delete album with id: {}", id);
             throw new UnExistedItemException("Can't delete album with id: " + id);
         }
     }

@@ -10,6 +10,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.Data;
 import lombok.ToString;
@@ -22,9 +23,10 @@ public class Album {
     @Id
     @GeneratedValue
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
     private String genre;
-    @Nullable
     private Long year;
     @OneToMany(mappedBy = "album",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
@@ -44,5 +46,12 @@ public class Album {
         if (this.genre != null && !this.genre.isEmpty()) {
             this.genre = this.genre.toLowerCase();
         }
+    }
+
+    public void setYear(Long year) {
+        if (year != null && year < 0) {
+            throw new IllegalArgumentException("Год не может быть отрицательным");
+        }
+        this.year = year;
     }
 }

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class CustomCache<K, V> {
     private final Map<K, CacheEntry<V>> cache = new LinkedHashMap<>();
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private final long ttlMillis = 60000;
+    private final long ttlMillis = 10000; //Временно установлено на 10 сек
     private final int maxSize = 1000;
     private boolean initialized = false;
 
@@ -167,5 +167,3 @@ public class CustomCache<K, V> {
         private final long timestamp;
     }
 }
-
-

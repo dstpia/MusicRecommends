@@ -20,7 +20,7 @@ public class ShortAlbumDtoMapperImpl implements ShortAlbumDtoMapper {
 
     @Override
     public ShortAlbumDto mapToShortDto(Album album) {
-        ShortAlbumDto shortAlbumDto = new ShortAlbumDto();
+        ShortAlbumDto shortAlbumDto = new ShortAlbumDto("", "");
         if (album != null) {
             shortAlbumDto.setId(album.getId());
             shortAlbumDto.setName(album.getName());
