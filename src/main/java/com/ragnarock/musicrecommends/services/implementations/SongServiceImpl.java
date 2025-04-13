@@ -47,22 +47,22 @@ public class SongServiceImpl implements SongService {
         if (songsCache.notEmptyCheck()) {
             longSongDtoList = songsCache.getValues().stream()
                     .filter(longSongDto -> {
-                        if (name != null) {
-                            if (longSongDto.getName() != null) {
-                                return longSongDto.getName().equals(name);
-                            }
-                            return false;
+                        if (name == null) {
+                            return true;
                         }
-                        return true;
+                        if (longSongDto.getName() != null) {
+                            return longSongDto.getName().equals(name);
+                        }
+                        return false;
                     })
                     .filter(longSongDto -> {
-                        if (normalizedLyrics != null) {
-                            if (longSongDto.getLyrics() != null) {
-                                return longSongDto.getLyrics().equals(normalizedLyrics);
-                            }
-                            return false;
+                        if (normalizedLyrics == null) {
+                            return true;
                         }
-                        return true;
+                        if (longSongDto.getLyrics() != null) {
+                            return longSongDto.getLyrics().equals(normalizedLyrics);
+                        }
+                        return false;
                     })
                     .sorted(Comparator.comparing(LongSongDto::getId)).toList();
             longSongDtoList.forEach(longSongDto -> {
@@ -78,9 +78,6 @@ public class SongServiceImpl implements SongService {
                 songsCache.putInCache(longSongDto.getId(), longSongDto); });
             log.info("Found in repository {} songs with searched name and lyrics",
                     longSongDtoList.size());
-        }
-        if (longSongDtoList != null) {
-            log.info("Final count of songs: {}", longSongDtoList.size());
         }
         return longSongDtoList;
     }
@@ -108,9 +105,6 @@ public class SongServiceImpl implements SongService {
                 songsCache.putInCache(longSongDto.getId(), longSongDto); });
             log.info("Found in repository {} songs with searched album year",
                     longSongDtoList.size());
-        }
-        if (longSongDtoList != null) {
-            log.info("Final count of songs: {}", longSongDtoList.size());
         }
         return longSongDtoList;
     }
@@ -146,9 +140,6 @@ public class SongServiceImpl implements SongService {
                 songsCache.putInCache(longSongDto.getId(), longSongDto); });
             log.info("Found in repository {} songs with searched album genre",
                     longSongDtoList.size());
-        }
-        if (longSongDtoList != null) {
-            log.info("Final count of songs: {}", longSongDtoList.size());
         }
         return longSongDtoList;
     }

@@ -35,13 +35,13 @@ public class InMemorySongServiceImpl implements SongService {
     @Override
     public List<LongSongDto> findByAlbumYear(Long year) {
         //Not available function
-        return null;
+        return List.of();
     }
 
     @Override
     public List<LongSongDto> findByAlbumGenre(String genre) {
         //Not available function
-        return null;
+        return List.of();
     }
 
     @Override

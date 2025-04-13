@@ -45,22 +45,22 @@ public class AlbumServiceImpl implements AlbumService {
         if (albumCache.notEmptyCheck() && (albumCache.cacheCurrentSize() == repository.count())) {
             longAlbumDtoList = albumCache.getValues().stream()
                     .filter(longAlbumDto -> {
-                        if (name != null) {
-                            if (longAlbumDto.getName() != null) {
-                                return longAlbumDto.getName().equals(name);
-                            }
-                            return false;
+                        if (name == null) {
+                            return true;
                         }
-                        return true;
+                        if (longAlbumDto.getName() != null) {
+                            return longAlbumDto.getName().equals(name);
+                        }
+                        return false;
                     })
                     .filter(longAlbumDto -> {
-                        if (normalizedGenre != null) {
-                            if (longAlbumDto.getGenre() != null) {
-                                return longAlbumDto.getGenre().equals(normalizedGenre);
-                            }
-                            return false;
+                        if (normalizedGenre == null) {
+                            return true;
                         }
-                        return true;
+                        if (longAlbumDto.getGenre() != null) {
+                            return longAlbumDto.getGenre().equals(normalizedGenre);
+                        }
+                        return false;
                     })
                     .sorted(Comparator.comparing(LongAlbumDto::getId)).toList();
             longAlbumDtoList.forEach(longAlbumDto -> {
@@ -105,9 +105,6 @@ public class AlbumServiceImpl implements AlbumService {
             longAlbumDtoList.forEach(longAlbumDto -> {
                 albumCache.putInCache(longAlbumDto.getId(), longAlbumDto); });
             log.info("Found in repository {} albums with searched year", longAlbumDtoList.size());
-        }
-        if (longAlbumDtoList != null) {
-            log.info("Final count of albums: {}", longAlbumDtoList.size());
         }
         return longAlbumDtoList;
     }

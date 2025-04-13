@@ -45,22 +45,22 @@ public class AuthorServiceImpl implements AuthorService {
         if (authorCache.notEmptyCheck() && (authorCache.cacheCurrentSize() == repository.count())) {
             longAuthorDtoList = authorCache.getValues().stream()
                     .filter(authorDto -> {
-                        if (name != null) {
-                            if (authorDto.getName() != null) {
-                                return authorDto.getName().equals(name);
-                            }
-                            return false;
+                        if (name == null) {
+                            return true;
                         }
-                        return true;
+                        if (authorDto.getName() != null) {
+                            return authorDto.getName().equals(name);
+                        }
+                        return false;
                     })
                     .filter(authorDto -> {
-                        if (normalizedGenre != null) {
-                            if (authorDto.getGenre() != null) {
-                                return authorDto.getGenre().equals(normalizedGenre);
-                            }
-                            return false;
+                        if (normalizedGenre == null) {
+                            return true;
                         }
-                        return true;
+                        if (authorDto.getGenre() != null) {
+                            return authorDto.getGenre().equals(normalizedGenre);
+                        }
+                        return false;
                     })
                     .sorted(Comparator.comparing(LongAuthorDto::getId)).toList();
             longAuthorDtoList.forEach(authorDto -> {
@@ -76,9 +76,6 @@ public class AuthorServiceImpl implements AuthorService {
                 authorCache.putInCache(longAuthorDto.getId(), longAuthorDto); });
             log.info("Found in repository {} authors with searched name and genre",
                     longAuthorDtoList.size());
-        }
-        if (longAuthorDtoList != null) {
-            log.info("Final count of authors: {}", longAuthorDtoList.size());
         }
         return longAuthorDtoList;
     }
