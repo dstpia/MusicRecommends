@@ -7,6 +7,7 @@ import com.ragnarock.musicrecommends.mappers.longmappers.LongAuthorDtoMapper;
 import com.ragnarock.musicrecommends.mappers.shortmappers.ShortAuthorDtoMapper;
 import com.ragnarock.musicrecommends.repository.AuthorRepository;
 import com.ragnarock.musicrecommends.services.AuthorService;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -52,7 +53,7 @@ public class AuthorServiceImpl implements AuthorService {
             log.info("Found in cache {} authors with searched name and genre",
                     longAuthorDtoList.size());
         }
-        if ((longAuthorDtoList != null) && (longAuthorDtoList.size()
+        if ((longAuthorDtoList == null) || (longAuthorDtoList.size()
                 != repository.findByNameAndGenre(name, genre).size())) {
             longAuthorDtoList = longAuthorDtoMapper
                     .mapToLongDtoList(repository.findByNameAndGenre(name, normalizedGenre));
@@ -97,6 +98,25 @@ public class AuthorServiceImpl implements AuthorService {
             log.error("Failed to save new author");
         }
         return longAuthorDto;
+    }
+
+    @Override
+    @Transactional
+    public List<LongAuthorDto> saveAuthorsList(List<ShortAuthorDto> authorsList) {
+        List<LongAuthorDto> authors = new ArrayList<>();
+        authorsList.forEach(authorDto -> {
+            LongAuthorDto longAuthorDto;
+            longAuthorDto = longAuthorDtoMapper.mapToLongDto(repository
+                    .save(shortAuthorDtoMapper.mapToObjectFromShort(authorDto)));
+            if (longAuthorDto != null) {
+                authors.add(longAuthorDto);
+                authorCache.putInCache(longAuthorDto.getId(), longAuthorDto);
+                log.info("Saved in cache and repository author, id: {}", longAuthorDto.getId());
+            } else {
+                log.error("Object not saved in cache and repository author");
+            }
+        });
+        return authors;
     }
 
     @Override

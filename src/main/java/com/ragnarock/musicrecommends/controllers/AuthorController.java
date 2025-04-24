@@ -87,6 +87,16 @@ public class AuthorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(author);
     }
 
+    @PostMapping("/saveList")
+    @Operation(summary = "Сохранить новых авторов",
+            description = "Сохраняет новых авторов в репозитории")
+    @ApiResponse(responseCode = "201", description = "Авторы сохранены")
+    public ResponseEntity<List<LongAuthorDto>> saveAuthorsList(
+            @Valid @RequestBody List<ShortAuthorDto> authorsList) {
+        List<LongAuthorDto> authors = authorService.saveAuthorsList(authorsList);
+        return ResponseEntity.status(HttpStatus.CREATED).body(authors);
+    }
+
     @PutMapping("/update")
     @Operation(summary = "Обновить информацию об авторе",
             description = "Обновляет информацию о существующем авторе")

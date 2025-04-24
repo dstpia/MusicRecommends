@@ -20,6 +20,8 @@ public interface SongService {
 
     LongSongDto saveSong(ShortSongDto shortSongDto);
 
+    List<LongSongDto> saveSongsList(List<ShortSongDto> songsList);
+
     LongSongDto updateSong(ShortSongDto shortSongDto);
 
     boolean deleteSong(Long id);

@@ -44,6 +44,12 @@ public class InMemoryAlbumServiceImpl implements AlbumService {
     }
 
     @Override
+    public List<LongAlbumDto> saveAlbumsList(List<ShortAlbumDto> albumsList) {
+        //Not available function
+        return List.of();
+    }
+
+    @Override
     public LongAlbumDto updateAlbum(ShortAlbumDto shortAlbumDto) {
         return longAlbumDtoMapper.mapToLongDto(repository
                 .updateAlbum(shortAlbumDtoMapper.mapToObjectFromShort(shortAlbumDto)));

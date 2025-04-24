@@ -7,6 +7,7 @@ import com.ragnarock.musicrecommends.mappers.longmappers.LongSongDtoMapper;
 import com.ragnarock.musicrecommends.mappers.shortmappers.ShortSongDtoMapper;
 import com.ragnarock.musicrecommends.repository.SongRepository;
 import com.ragnarock.musicrecommends.services.SongService;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +55,7 @@ public class SongServiceImpl implements SongService {
             log.info("Found in cache {} songs with searched name and lyrics",
                     longSongDtoList.size());
         }
-        if ((longSongDtoList != null) && (longSongDtoList.size()
+        if ((longSongDtoList == null) || (longSongDtoList.size()
                 != repository.findByNameAndLyrics(name, normalizedLyrics).size())) {
             longSongDtoList = longSongDtoMapper
                     .mapToLongDtoList(repository.findByNameAndLyrics(name, normalizedLyrics));
@@ -82,8 +83,8 @@ public class SongServiceImpl implements SongService {
                     songsCache.putInCache(longSongDto.getId(), longSongDto));
             log.info("Found in cache {} songs with searched album year", longSongDtoList.size());
         }
-        if ((longSongDtoList != null)
-                && (longSongDtoList.size() != repository.findByAlbumYear(year).size())) {
+        if ((longSongDtoList == null)
+                || (longSongDtoList.size() != repository.findByAlbumYear(year).size())) {
             longSongDtoList = longSongDtoMapper.mapToLongDtoList(repository.findByAlbumYear(year));
             longSongDtoList.forEach(longSongDto ->
                     songsCache.putInCache(longSongDto.getId(), longSongDto));
@@ -116,7 +117,7 @@ public class SongServiceImpl implements SongService {
             log.info("Found in cache {} songs with searched album genre",
                     longSongDtoList.size());
         }
-        if ((longSongDtoList != null) && (longSongDtoList.size()
+        if ((longSongDtoList == null) || (longSongDtoList.size()
                 != repository.findByAlbumGenre(normalizedGenre).size())) {
             longSongDtoList = longSongDtoMapper
                     .mapToLongDtoList(repository.findByAlbumGenre(normalizedGenre));
@@ -161,6 +162,25 @@ public class SongServiceImpl implements SongService {
             log.error("Failed to save new song");
         }
         return longSongDto;
+    }
+
+    @Override
+    @Transactional
+    public List<LongSongDto> saveSongsList(List<ShortSongDto> songsList) {
+        List<LongSongDto> songs = new ArrayList<>();
+        songsList.forEach(authorDto -> {
+            LongSongDto longSongDto;
+            longSongDto = longSongDtoMapper.mapToLongDto(repository
+                    .save(shortSongDtoMapper.mapToObjectFromShort(authorDto)));
+            if (longSongDto != null) {
+                songs.add(longSongDto);
+                songsCache.putInCache(longSongDto.getId(), longSongDto);
+                log.info("Saved in cache and repository song, id: {}", longSongDto.getId());
+            } else {
+                log.error("Object not saved in cache and repository song");
+            }
+        });
+        return songs;
     }
 
     @Override

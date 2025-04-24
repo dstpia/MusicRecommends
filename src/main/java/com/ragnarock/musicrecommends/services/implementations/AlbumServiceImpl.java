@@ -7,6 +7,7 @@ import com.ragnarock.musicrecommends.mappers.longmappers.LongAlbumDtoMapper;
 import com.ragnarock.musicrecommends.mappers.shortmappers.ShortAlbumDtoMapper;
 import com.ragnarock.musicrecommends.repository.AlbumRepository;
 import com.ragnarock.musicrecommends.services.AlbumService;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -52,7 +53,7 @@ public class AlbumServiceImpl implements AlbumService {
             log.info("Found in cache {} albums with searched name and genre",
                     longAlbumDtoList.size());
         }
-        if ((longAlbumDtoList != null) && (longAlbumDtoList.size()
+        if ((longAlbumDtoList == null) || (longAlbumDtoList.size()
                 != repository.findByNameAndGenre(name, normalizedGenre).size())) {
             longAlbumDtoList = longAlbumDtoMapper
                     .mapToLongDtoList(repository.findByNameAndGenre(name, normalizedGenre));
@@ -80,8 +81,8 @@ public class AlbumServiceImpl implements AlbumService {
                     albumCache.putInCache(longAlbumDto.getId(), longAlbumDto));
             log.info("Found in cache {} albums with searched year", longAlbumDtoList.size());
         }
-        if ((longAlbumDtoList != null)
-                && (longAlbumDtoList.size() != repository.findByYear(year).size())) {
+        if ((longAlbumDtoList == null)
+                || (longAlbumDtoList.size() != repository.findByYear(year).size())) {
             longAlbumDtoList = longAlbumDtoMapper.mapToLongDtoList(repository.findByYear(year));
             longAlbumDtoList.forEach(longAlbumDto ->
                     albumCache.putInCache(longAlbumDto.getId(), longAlbumDto));
@@ -122,6 +123,25 @@ public class AlbumServiceImpl implements AlbumService {
             log.info("Saved in cache and repository album, id: {}", longAlbumDto.getId());
         }
         return longAlbumDto;
+    }
+
+    @Override
+    @Transactional
+    public List<LongAlbumDto> saveAlbumsList(List<ShortAlbumDto> albumsList) {
+        List<LongAlbumDto> albums = new ArrayList<>();
+        albumsList.forEach(albumDto -> {
+            LongAlbumDto longAlbumDto;
+            longAlbumDto = longAlbumDtoMapper.mapToLongDto(repository
+                    .save(shortAlbumDtoMapper.mapToObjectFromShort(albumDto)));
+            if (longAlbumDto != null) {
+                albums.add(longAlbumDto);
+                albumCache.putInCache(longAlbumDto.getId(), longAlbumDto);
+                log.info("Saved in cache and repository album, id: {}", longAlbumDto.getId());
+            } else {
+                log.error("Object not saved in cache and repository album");
+            }
+        });
+        return albums;
     }
 
     @Override

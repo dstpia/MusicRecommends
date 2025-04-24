@@ -116,6 +116,16 @@ public class SongController {
         return ResponseEntity.status(HttpStatus.CREATED).body(song);
     }
 
+    @PostMapping("/saveList")
+    @Operation(summary = "Сохранить новые песни",
+            description = "Сохраняет новые песни в репозитории")
+    @ApiResponse(responseCode = "201", description = "Песни сохранены")
+    public ResponseEntity<List<LongSongDto>> saveSongsList(
+            @Valid @RequestBody List<ShortSongDto> songsList) {
+        List<LongSongDto> songs = songService.saveSongsList(songsList);
+        return ResponseEntity.status(HttpStatus.CREATED).body(songs);
+    }
+
     @PutMapping("/update")
     @Operation(summary = "Обновить информацию о песне",
             description = "Обновляет информацию о существующей песне")

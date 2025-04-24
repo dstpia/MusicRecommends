@@ -18,6 +18,8 @@ public interface AlbumService {
 
     LongAlbumDto saveAlbum(ShortAlbumDto album);
 
+    List<LongAlbumDto> saveAlbumsList(List<ShortAlbumDto> albumsList);
+
     LongAlbumDto updateAlbum(ShortAlbumDto album);
 
     boolean deleteAlbum(Long id);

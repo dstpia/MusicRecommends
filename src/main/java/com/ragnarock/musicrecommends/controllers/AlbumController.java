@@ -100,6 +100,16 @@ public class AlbumController {
         return ResponseEntity.status(HttpStatus.CREATED).body(album);
     }
 
+    @PostMapping("/saveList")
+    @Operation(summary = "Сохранить новые альбомы",
+            description = "Сохраняет новые альбомы в репозитории")
+    @ApiResponse(responseCode = "201", description = "Альбомы сохранены")
+    public ResponseEntity<List<LongAlbumDto>> saveAlbumsList(
+            @Valid @RequestBody List<ShortAlbumDto> albumsList) {
+        List<LongAlbumDto> albums = albumService.saveAlbumsList(albumsList);
+        return ResponseEntity.status(HttpStatus.CREATED).body(albums);
+    }
+
     @PutMapping("/update")
     @Operation(summary = "Обновить информацию об альбоме",
             description = "Обновляет информацию о существующем альбоме")

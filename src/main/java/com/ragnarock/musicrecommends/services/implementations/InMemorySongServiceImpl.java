@@ -51,6 +51,12 @@ public class InMemorySongServiceImpl implements SongService {
     }
 
     @Override
+    public List<LongSongDto> saveSongsList(List<ShortSongDto> songsList) {
+        //Not available function
+        return List.of();
+    }
+
+    @Override
     public LongSongDto updateSong(ShortSongDto shortSongDto) {
         return longSongDtoMapper.mapToLongDto(repository
                 .updateSong(shortSongDtoMapper.mapToObjectFromShort(shortSongDto)));

@@ -16,6 +16,8 @@ public interface AuthorService {
 
     LongAuthorDto saveAuthor(ShortAuthorDto shortAuthorDto);
 
+    List<LongAuthorDto> saveAuthorsList(List<ShortAuthorDto> authors);
+
     LongAuthorDto updateAuthor(ShortAuthorDto shortAuthorDto);
 
     boolean deleteAuthor(Long id);

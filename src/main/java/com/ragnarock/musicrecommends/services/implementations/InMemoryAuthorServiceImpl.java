@@ -39,6 +39,12 @@ public class InMemoryAuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    public List<LongAuthorDto> saveAuthorsList(List<ShortAuthorDto> authors) {
+        //Not available function
+        return List.of();
+    }
+
+    @Override
     public LongAuthorDto updateAuthor(ShortAuthorDto shortAuthorDto) {
         return longAuthorDtoMapper.mapToLongDto(repository
                 .updateAuthor(shortAuthorDtoMapper.mapToObjectFromShort(shortAuthorDto)));
