@@ -3,6 +3,7 @@ package com.ragnarock.musicrecommends.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.PreDestroy;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -127,5 +128,23 @@ public class LogController {
             log.error("Invalid date format");
             return false;
         }
+    }
+
+    @PreDestroy
+    public synchronized void destroy() throws IOException {
+        String baseFilePath = "logs/app.log";
+        File baseFile = new File(baseFilePath);
+        if (!baseFile.exists()) {
+            log.error("Base file does not exist");
+            return;
+        }
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String newFileName = "logs/app-" + currentDate  + ".log";
+        File newFile = new File(newFileName);
+        String generatedLog = generateLogForDate(baseFile, currentDate);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(newFile))) {
+            writer.write(generatedLog);
+        }
+        log.info("New log file created, name: {}", newFile.getName());
     }
 }

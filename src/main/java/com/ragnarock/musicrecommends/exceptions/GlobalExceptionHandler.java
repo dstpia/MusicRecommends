@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -25,7 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<AppError> handleConflictException(
-            UnExistedItemException e) {
+            ConflictException e) {
         return new ResponseEntity<>(new AppError(HttpStatus.CONFLICT,
                 e.getMessage()), HttpStatus.CONFLICT);
     }
