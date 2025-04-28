@@ -30,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Log controller", description = "API для работы с логами приложения")
 public class LogController {
 
+    private static final String TIME_FORMAT = "yyyy-MM-dd";
+
     @GetMapping
     @Operation(summary = "Получить список доступных лог файлов",
             description = "Возвращает список всех лог файлов в папке logs")
@@ -68,7 +70,7 @@ public class LogController {
         }
         String newFileName = "logs/app-" + date + ".log";
         File newFile = new File(newFileName);
-        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String currentDate = new SimpleDateFormat(TIME_FORMAT).format(new Date());
         if (newFile.exists() && !(date.equals(currentDate))) {
             ByteArrayResource resource = new ByteArrayResource(Files
                     .readAllBytes(newFile.toPath()));
@@ -120,7 +122,7 @@ public class LogController {
 
     private boolean isValidDate(String dateStr) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMAT);
             sdf.setLenient(false);
             sdf.parse(dateStr);
             return true;
@@ -138,7 +140,7 @@ public class LogController {
             log.error("Base file does not exist");
             return;
         }
-        String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        String currentDate = new SimpleDateFormat(TIME_FORMAT).format(new Date());
         String newFileName = "logs/app-" + currentDate  + ".log";
         File newFile = new File(newFileName);
         String generatedLog = generateLogForDate(baseFile, currentDate);

@@ -29,7 +29,11 @@ public class AsyncLogServiceImpl implements AsyncLogService {
 
         CompletableFuture.runAsync(() -> {
             try {
-                Thread.sleep(20000);
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
 
                 Path sourcePath = Paths.get("logs/app.log");
                 String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());

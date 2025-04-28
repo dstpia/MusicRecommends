@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class InMemorySongServiceImplTest {
+class InMemorySongServiceImplTest {
 
     private InMemorySongDao repository;
     private LongSongDtoMapper longSongDtoMapper;
