@@ -68,11 +68,11 @@ public class AsyncLogServiceImpl implements AsyncLogService {
         return CompletableFuture.completedFuture(taskId);
     }
 
-    public void specialWait() {
+    public void specialWait() throws InterruptedException {
         try {
             Thread.sleep(20000);
         } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
+            throw new InterruptedException(e.getMessage());
         }
     }
 
