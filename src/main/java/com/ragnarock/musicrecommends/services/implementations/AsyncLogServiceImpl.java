@@ -29,11 +29,7 @@ public class AsyncLogServiceImpl implements AsyncLogService {
 
         CompletableFuture.runAsync(() -> {
             try {
-                try {
-                    Thread.sleep(20000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                specialWait();
 
                 Path sourcePath = Paths.get("logs/app.log");
                 String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -70,6 +66,14 @@ public class AsyncLogServiceImpl implements AsyncLogService {
         });
 
         return CompletableFuture.completedFuture(taskId);
+    }
+
+    public void specialWait() {
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public String getLogFilePath(String taskId) {
