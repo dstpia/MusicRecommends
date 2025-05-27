@@ -47,7 +47,7 @@ public class Song {
     private void format() {
         if (!lyrics.isEmpty()) {
             this.lyrics = this.lyrics.substring(0, 1).toUpperCase()
-                    + this.lyrics.substring(1).toLowerCase();
+                    + this.lyrics.substring(1);
         }
     }
 }

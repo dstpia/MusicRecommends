@@ -29,8 +29,7 @@ public class Album {
     private String genre;
     private Long year;
     @OneToMany(mappedBy = "album",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            orphanRemoval = true)
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
     @Nullable
     private List<Song> songs;

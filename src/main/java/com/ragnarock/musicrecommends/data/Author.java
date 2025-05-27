@@ -30,7 +30,7 @@ public class Author {
     private String name;
     @NotNull
     private String genre;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @ToString.Exclude
     @Nullable
     private List<Album> albums;

@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 public interface SongRepository extends JpaRepository<Song, Long> {
     @Query("SELECT s FROM Song s"
             + " WHERE (:name IS NULL OR s.name = :name)"
-            + " AND (:lyrics IS NULL OR s.lyrics = :lyrics)")
+            + " AND (:lyrics IS NULL OR LOWER(s.lyrics) LIKE LOWER(CONCAT('%', :lyrics, '%')))")
     List<Song> findByNameAndLyrics(@Param("name") String name, @Param("lyrics") String lyrics);
 
     @Query("SELECT s FROM Song s "

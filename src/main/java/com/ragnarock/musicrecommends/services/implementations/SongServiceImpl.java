@@ -37,18 +37,13 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public List<LongSongDto> findByNameAndLyrics(String name, String lyrics) {
-        String normalizedLyrics;
-        if (lyrics != null) {
-            normalizedLyrics = lyrics.substring(0, 1).toUpperCase()
-                    + lyrics.substring(1).toLowerCase();
-        } else {
-            normalizedLyrics = null;
-        }
         List<LongSongDto> longSongDtoList = null;
         if (songsCache.notEmptyCheck()) {
             longSongDtoList = songsCache.getValues().stream()
                     .filter(longSongDto -> stringFilter(longSongDto.getName(), name))
-                    .filter(longSongDto -> stringFilter(longSongDto.getLyrics(), normalizedLyrics))
+                    .filter(longSongDto -> lyrics == null
+                            || longSongDto.getLyrics() != null
+                            && longSongDto.getLyrics().toLowerCase().contains(lyrics))
                     .sorted(Comparator.comparing(LongSongDto::getId)).toList();
             longSongDtoList.forEach(longSongDto ->
                     songsCache.putInCache(longSongDto.getId(), longSongDto));
@@ -56,9 +51,9 @@ public class SongServiceImpl implements SongService {
                     longSongDtoList.size());
         }
         if ((longSongDtoList == null) || (longSongDtoList.size()
-                != repository.findByNameAndLyrics(name, normalizedLyrics).size())) {
+                != repository.findByNameAndLyrics(name, lyrics).size())) {
             longSongDtoList = longSongDtoMapper
-                    .mapToLongDtoList(repository.findByNameAndLyrics(name, normalizedLyrics));
+                    .mapToLongDtoList(repository.findByNameAndLyrics(name, lyrics));
             longSongDtoList.forEach(longSongDto ->
                     songsCache.putInCache(longSongDto.getId(), longSongDto));
             log.info("Found in repository {} songs with searched name and lyrics",

@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: musicdb
+      POSTGRES_USER: musicuser
+      POSTGRES_PASSWORD: musicpass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: .
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/musicdb
+      SPRING_DATASOURCE_USERNAME: musicuser
+      SPRING_DATASOURCE_PASSWORD: musicpass
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:80"
+
+volumes:
+  pgdata:
