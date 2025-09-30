@@ -66,13 +66,13 @@
 
 ## 2.1 Интерфейс пользователя
 Окно приветствия.  
-![Окно приветствия](https://github.com/dstpia/MusicRecommends/tree/master/mockups/home.png)
+![Окно приветствия](https://github.com/dstpia/MusicRecommends/blob/master/mockups/home.png)
 
 Окно вывода таблиц, на примере любимых альбомов.  
-![Окно вывода таблиц, на примере любимых альбомов](https://github.com/dstpia/MusicRecommends/tree/master/mockups/table.png)
+![Окно вывода таблиц, на примере любимых альбомов](https://github.com/dstpia/MusicRecommends/blob/master/mockups/table.png)
 
 Примерная работа модальных окон.  
-![Примерная работа модальных окон](https://github.com/dstpia/MusicRecommends/tree/master/mockups/modal.png)
+![Примерная работа модальных окон](https://github.com/dstpia/MusicRecommends/blob/master/mockups/modal.png)
 
 <a name="user_specifications"/>
 
