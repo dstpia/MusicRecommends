@@ -76,7 +76,7 @@
 Модальное окно поиска.
 ![Модальное окно поиска](https://github.com/dstpia/MusicRecommends/blob/master/mockups/modal.png)
 Модальное окно добавления.
-![Модальное окно добавления](https://github.com/dstpia/MusicRecommends/blob/master/mockups/modal.png)
+![Модальное окно добавления](https://github.com/dstpia/MusicRecommends/blob/master/mockups/add.png)
 
 <a name="user_specifications"/>
 
