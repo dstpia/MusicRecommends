@@ -71,8 +71,12 @@
 Окно вывода таблиц, на примере любимых альбомов.  
 ![Окно вывода таблиц, на примере любимых альбомов](https://github.com/dstpia/MusicRecommends/blob/master/mockups/table.png)
 
-Примерная работа модальных окон.  
-![Примерная работа модальных окон](https://github.com/dstpia/MusicRecommends/blob/master/mockups/modal.png)
+Работа модальных окон, на примере поиска и добавления.
+
+Модальное окно поиска.
+![Модальное окно поиска](https://github.com/dstpia/MusicRecommends/blob/master/mockups/modal.png)
+Модальное окно добавления.
+![Модальное окно добавления](https://github.com/dstpia/MusicRecommends/blob/master/mockups/modal.png)
 
 <a name="user_specifications"/>
 
