@@ -66,17 +66,17 @@
 
 ## 2.1 Интерфейс пользователя
 Окно приветствия.  
-![Окно приветствия](https://github.com/dstpia/MusicRecommends/blob/master/mockups/home.png)
+![Окно приветствия](https://github.com/dstpia/MusicRecommends/blob/master/documents/pictures/mockups/home.png)
 
 Окно вывода таблиц, на примере любимых альбомов.  
-![Окно вывода таблиц, на примере любимых альбомов](https://github.com/dstpia/MusicRecommends/blob/master/mockups/table.png)
+![Окно вывода таблиц, на примере любимых альбомов](https://github.com/dstpia/MusicRecommends/blob/master/documents/pictures/mockups/table.png)
 
 Работа модальных окон, на примере поиска и добавления.
 
 Модальное окно поиска.
-![Модальное окно поиска](https://github.com/dstpia/MusicRecommends/blob/master/mockups/modal.png)
+![Модальное окно поиска](https://github.com/dstpia/MusicRecommends/blob/master/documents/pictures/mockups/modal.png)
 Модальное окно добавления.
-![Модальное окно добавления](https://github.com/dstpia/MusicRecommends/blob/master/mockups/add.png)
+![Модальное окно добавления](https://github.com/dstpia/MusicRecommends/blob/master/documents/pictures/mockups/add.png)
 
 <a name="user_specifications"/>
 
@@ -141,7 +141,7 @@
 <a name="restrictions_and_exclusions"/>
 
 ### 3.1.2 Ограничения и исключения
-1. Приложение может добавлять новые альбомы в коллекцию только при наличии подключения к Интернету;
+1. Приложение может работать только при наличии подключения к Интернету при выводе системы на сервер;
 
 <a name="non-functional_requirements"/>
 
