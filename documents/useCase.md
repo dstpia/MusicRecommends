@@ -1,6 +1,6 @@
 # Диаграмма вариантов использования
 
-![Диаграмма вариантов использования](https://github.com/dstpia/MusicRecommends/blob/main/documents/pictures/diagrams/useCase.png)
+![Диаграмма вариантов использования](https://github.com/dstpia/MusicRecommends/blob/master/documents/pictures/diagrams/useCase.png)
 
 # Глоссарий
 
