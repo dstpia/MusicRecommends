@@ -13,3 +13,7 @@
 [Диаграммы состояний](https://github.com/dstpia/MusicRecommends/blob/master/documents/states.md)
 
 [Диаграмма вариантов использования](https://github.com/dstpia/MusicRecommends/blob/master/documents/useCase.md)
+
+[Test plan](https://github.com/dstpia/MusicRecommends/blob/master/documents/testPlan.md)
+
+[Test results](https://github.com/dstpia/MusicRecommends/blob/master/documents/testResults.md)
